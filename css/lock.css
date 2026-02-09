@@ -1,0 +1,54 @@
+.lock-screen{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  color:white;
+  padding:30px 20px;
+}
+
+/* TIME */
+.lock-top{
+  text-align:center;
+}
+#lockTime{
+  font-size:48px;
+  font-weight:300;
+}
+#lockDate{
+  font-size:16px;
+  opacity:.8;
+}
+
+/* MID */
+.lock-mid{
+  text-align:center;
+  font-size:14px;
+  opacity:.9;
+}
+
+/* BOTTOM */
+.lock-bottom{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.lock-bottom input{
+  padding:12px;
+  border-radius:14px;
+  border:none;
+  background:rgba(255,255,255,.2);
+  color:white;
+  text-align:center;
+}
+
+.lock-bottom button{
+  padding:12px;
+  border-radius:14px;
+  border:none;
+  background:#ff2e63;
+  color:white;
+  font-size:15px;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camera</title>
+
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/phone.css">
+<link rel="stylesheet" href="../css/glass.css">
+<link rel="stylesheet" href="../css/camera.css">
+<link rel="stylesheet" href="../css/brightness.css">
+
+</head>
+<body>
+
+<div class="phone appPage camera-page">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <button onclick="goBack()">⬅</button>
+    <span>Camera</span>
+    <button onclick="switchCamera()">🔄</button>
+  </div>
+
+  <!-- CAMERA VIEW -->
+  <video id="camera" autoplay playsinline></video>
+
+  <!-- CONTROLS -->
+  <div class="camera-controls">
+    <button class="capture-btn" onclick="capturePhoto()"></button>
+  </div>
+
+</div>
+
+<div id="brightnessLayer"></div>
+
+<script src="../js/system.js"></script>
+<script src="../js/camera.js"></script>
+</body>
+</html>

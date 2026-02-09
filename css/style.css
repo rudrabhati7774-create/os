@@ -1,0 +1,72 @@
+body{
+  margin:0;
+  height:100vh;
+  font-family:sans-serif;
+  background:linear-gradient(135deg,#ff5fa2,#0b0b0b);
+  color:white;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+/* PAGE ANIMATION */
+.page{
+  animation: openApp .28s ease-out;
+}
+@keyframes openApp{
+  from{ transform:scale(.94); opacity:0 }
+  to{ transform:scale(1); opacity:1 }
+}
+
+/* TOUCH FEEDBACK */
+.app:active{ transform:scale(.92) }
+
+/* BACK ANIMATION */
+.backOut{
+  animation: closeApp .2s ease-in;
+}
+@keyframes closeApp{
+  to{ transform:scale(.94); opacity:0 }
+}
+
+.boot, .lock{
+  text-align:center;
+}
+
+button{
+  padding:10px 25px;
+  border:none;
+  border-radius:25px;
+  background:linear-gradient(90deg,#ff5fa2,#ff9ecf);
+  color:white;
+}
+
+.home .apps{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:20px;
+}
+
+.appPage{
+  padding:20px;
+}
+html,body{
+  width:100%;
+  height:100%;
+  margin:0;
+}
+
+.phone{
+  width:100%;
+  max-width:430px;
+  height:100vh;
+  margin:auto;
+  background:linear-gradient(135deg,#ff5fa2,#111);
+  overflow:hidden;
+  position:relative;
+}
+
+.appPage{
+  height:100%;
+  padding:env(safe-area-inset-top);
+}

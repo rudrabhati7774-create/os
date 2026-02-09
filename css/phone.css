@@ -1,0 +1,50 @@
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+
+/* SAFE TOUCH */
+button{
+  min-width:44px;
+  min-height:44px;
+}
+
+/* TEXT SCALE */
+body{
+  font-size:clamp(14px,3.5vw,16px);
+}
+body{
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+
+/* Glass overlay for apps */
+.phone{
+  background:rgba(0,0,0,.35);
+  backdrop-filter:blur(20px);
+}
+html, body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  background:black;   /* ❌ no wallpaper here */
+  overflow:hidden;
+}
+
+/* PHONE FRAME */
+.phone{
+  width:100%;
+  max-width:420px;
+  height:100dvh;
+  margin:auto;
+  position:relative;
+  overflow:hidden;
+
+  /* ✅ wallpaper yahin lagegi */
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}

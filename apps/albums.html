@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photos</title>
+
+<link rel="stylesheet" href="../css/phone.css">
+<link rel="stylesheet" href="../css/album.css">
+</head>
+
+<body>
+
+<div class="phone album-app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <span onclick="history.back()">⬅</span>
+    <span>Photos</span>
+    <span></span>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<!-- FULL VIEW -->
+<div class="viewer" id="viewer">
+  <img id="viewerImg">
+
+  <div class="viewer-bar">
+    <button onclick="setWallpaper()">Set Wallpaper</button>
+    <button onclick="deletePhoto()">Delete</button>
+    <button onclick="closeViewer()">Close</button>
+  </div>
+</div>
+
+<script src="../js/album.js"></script>
+<script src="../js/system.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lock Screen</title>
+
+<link rel="stylesheet" href="css/phone.css">
+<link rel="stylesheet" href="css/lock.css">
+</head>
+
+<body>
+
+<div class="phone" id="phone">
+
+  <div class="lock-screen glass">
+
+    <div class="lock-top">
+      <span id="lockTime">00:00</span>
+      <span id="lockDate">---</span>
+    </div>
+
+    <div class="lock-mid">
+      <div id="battery">🔋 100%</div>
+    </div>
+
+    <div class="lock-bottom">
+      <input type="password" id="passInput" placeholder="Enter password">
+      <button onclick="unlock()">Unlock</button>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="js/system.js"></script>
+<script src="js/lock.js"></script>
+</body>
+</html>

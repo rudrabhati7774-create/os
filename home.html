@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home</title>
+
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/phone.css">
+<link rel="stylesheet" href="css/glass.css">
+<link rel="stylesheet" href="css/home.css">
+
+</head>
+<body>
+
+<div class="phone home">
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span id="sb-time">00:00</span>
+    <span id="sb-date">---</span>
+    <span id="sb-battery">🔋100%</span>
+  </div>
+
+  <!-- APPS GRID -->
+  <div class="apps-grid">
+    <div class="app glass" onclick="openApp('apps/albums.html')">
+      <img src="assets/icons/album.png">
+      <span>Photos</span>
+    </div>
+
+    <div class="app glass" onclick="openApp('apps/camera.html')">
+      <img src="assets/icons/camera.png">
+      <span>Camera</span>
+    </div>
+
+    <div class="app glass" onclick="openApp('apps/messages.html')">
+      <img src="assets/icons/messages.jpg">
+      <span>Messages</span>
+    </div>
+
+    <div class="app glass" onclick="openApp('apps/videos.html')">
+      <img src="assets/icons/video.png">
+      <span>Videos</span>
+    </div>
+
+    <div class="app glass" onclick="openApp('apps/settings.html')">
+      <img src="assets/icons/settings.jpg">
+      <span>Settings</span>
+    </div>
+  </div>
+
+</div>
+
+<div id="brightnessLayer"></div>
+
+<script src="js/system.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>

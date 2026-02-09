@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Videos</title>
+
+<link rel="stylesheet" href="../css/phone.css">
+<link rel="stylesheet" href="../css/videos.css">
+</head>
+
+<body>
+
+<div class="phone">
+
+  <div class="video-app glass">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <span onclick="history.back()">⬅</span>
+      <span>Videos</span>
+      <span></span>
+    </div>
+
+    <!-- GRID -->
+    <div class="video-grid" id="videoGrid"></div>
+
+  </div>
+
+</div>
+
+<!-- PLAYER -->
+<div class="player" id="player">
+  <video id="videoPlayer" controls></video>
+
+  <div class="player-bar">
+    <button onclick="deleteVideo()">Delete</button>
+    <button onclick="closePlayer()">Close</button>
+  </div>
+</div>
+
+<script src="../js/system.js"></script>
+<script src="../js/videos.js"></script>
+</body>
+</html>

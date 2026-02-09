@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings</title>
+
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/phone.css">
+<link rel="stylesheet" href="../css/glass.css">
+<link rel="stylesheet" href="../css/settings.css">
+<link rel="stylesheet" href="../css/brightness.css">
+
+</head>
+<body>
+
+<div class="phone appPage">
+
+  <div class="top-bar">
+    <button onclick="history.back()">⬅</button>
+    <span>Settings</span>
+  </div>
+
+  <!-- BRIGHTNESS -->
+  <div class="card glass">
+    <h3>☀ Brightness</h3>
+    <div class="controls">
+      <button onclick="changeBrightness(-10)">−</button>
+      <button onclick="changeBrightness(10)">+</button>
+    </div>
+  </div>
+
+  <!-- VOLUME -->
+  <div class="card glass">
+    <h3>🔊 Volume</h3>
+    <div class="controls">
+      <button onclick="changeVolume(-10)">−</button>
+      <button onclick="changeVolume(10)">+</button>
+    </div>
+  </div>
+
+  <!-- PASSWORD -->
+  <div class="card glass">
+    <h3>🔐 Lock Password</h3>
+    <input id="newPass" type="password" placeholder="New password">
+    <button onclick="setPassword()">Save</button>
+  </div>
+
+  <!-- RESET -->
+  <div class="card glass danger">
+    <h3>♻ Reset Phone</h3>
+    <button onclick="resetOS()">Reset Device</button>
+  </div>
+
+</div>
+
+<div id="brightnessLayer"></div>
+
+<script src="../js/system.js"></script>
+<script>
+function setPassword(){
+  const p = newPass.value.trim();
+  if(p.length < 3){
+    alert("Password too short");
+    return;
+  }
+  localStorage.setItem("password", p);
+  alert("Password saved 🔐");
+  newPass.value="";
+}
+</script>
+
+</body>
+</html>

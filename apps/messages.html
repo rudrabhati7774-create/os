@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="appPage">
+
+<h2>Messages 💬</h2>
+<p>My Love: I’m always with you ❤️</p>
+<script>
+/* GLOBAL WALLPAPER */
+const wp = localStorage.getItem("wallpaper");
+if(wp){
+  document.body.style.background =
+    `url(${wp}) center/cover no-repeat`;
+}else{
+  document.body.style.background =
+    "linear-gradient(135deg,#ff5fa2,#ff9ecf)";
+}
+
+/* GLOBAL BRIGHTNESS OVERLAY */
+const br = localStorage.getItem("brightness") || 100;
+const overlay = document.createElement("div");
+overlay.style.position="fixed";
+overlay.style.inset=0;
+overlay.style.pointerEvents="none";
+overlay.style.background=`rgba(0,0,0,${(120-br)/120})`;
+document.body.appendChild(overlay);
+</script>
+<script>
+function back(){
+  document.body.classList.add("backOut");
+  setTimeout(()=>history.back(),180);
+}
+</script>
+
+<button onclick="back()">Back</button>
+<script>
+function back(){ history.back(); }
+</script>
+<script>
+function back(){
+  document.body.classList.add("backOut");
+  setTimeout(()=>history.back(),180);
+}
+</script>
+<div id="brightnessLayer"></div>
+
+</body>
+</html>
