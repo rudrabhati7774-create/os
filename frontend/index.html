@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="css/style.css">
+<title>WhatsApp</title>
 </head>
 
 <body class="center">
 
 <div class="login">
-  <h2>Messages 💬</h2>
-  <input id="name" placeholder="Enter your name">
-  <button onclick="join()">Start Chat</button>
+  <h2>WhatsApp 💚</h2>
+  <input id="name" placeholder="Your name">
+  <button id="btn">Continue</button>
 </div>
 
 <script>
-function join(){
-  localStorage.setItem("user", name.value);
-  location.href="chat.html";
-}
+document.getElementById("btn").onclick = function () {
+  const username = document.getElementById("name").value.trim();
+  if (!username) {
+    alert("Enter your name");
+    return;
+  }
+  localStorage.setItem("user", username);
+  window.location.href = "chat.html";
+};
 </script>
 
 </body>

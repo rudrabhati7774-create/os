@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Romantic Calendar 💖</title>
+<style>
+*{margin:0; padding:0; box-sizing:border-box; font-family:system-ui;}
+body{display:flex; justify-content:center; align-items:center; min-height:100vh; background:linear-gradient(135deg,#ff8dc7,#ff4f8b);}
+.phone{width:360px; height:720px; background: linear-gradient(135deg,#ff7eb3,#ff4f8b); border-radius:36px; overflow:hidden; box-shadow:0 25px 70px rgba(0,0,0,.45); display:flex; flex-direction:column; color:white;}
+.topbar{padding:16px; display:flex; justify-content:space-between; align-items:center; font-size:18px; font-weight:600; background:rgba(255,255,255,.15); backdrop-filter:blur(10px);}
+.weekdays{display:grid; grid-template-columns:repeat(7,1fr); text-align:center; padding:10px 0; font-weight:600; color:white;}
+.calendar-grid{flex:1; padding:15px; display:grid; grid-template-columns:repeat(7,1fr); gap:8px;}
+.day{height:70px; border-radius:14px; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; font-weight:600; cursor:pointer; position:relative;}
+.day.today{background:white; color:#ff4f8b; box-shadow:0 0 15px rgba(255,255,255,.8);}
+.day.marked::after{content:"💖"; position:absolute; bottom:6px; font-size:14px;}
+.day.empty{background:transparent; cursor:default;}
+.popup{position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:999;}
+.popup-box{background:white; color:#ff4f8b; padding:22px; border-radius:22px; text-align:center; width:80%; animation:pop .3s ease;}
+@keyframes pop{from{transform:scale(.7);opacity:0} to{transform:scale(1);opacity:1;}}
+.popup-box textarea{width:100%; border-radius:12px; border:1px solid #ff4f8b; padding:8px; font-size:14px; resize:none; color:#ff4f8b;}
+.popup-box button{margin-top:15px; padding:10px 22px; border:none; border-radius:14px; background:#ff4f8b; color:white; font-size:14px; cursor:pointer;}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="topbar">
+    <span onclick="prevMonth()">⬅</span>
+    <span id="monthYear">Month Year</span>
+    <span onclick="nextMonth()">➡</span>
+  </div>
+
+  <div class="weekdays">
+    <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+  </div>
+
+  <div class="calendar-grid" id="calendar"></div>
+</div>
+
+<div class="popup" id="popup">
+  <div class="popup-box">
+    <h3 id="popupDate"></h3>
+    <textarea id="noteText" rows="3" placeholder="Type your love note 💖"></textarea>
+    <button onclick="saveNote()">Save 💕</button>
+    <button onclick="closePopup()">Close ❌</button>
+  </div>
+</div>
+
+<script>
+const calendar = document.getElementById("calendar");
+const monthYear = document.getElementById("monthYear");
+const popup = document.getElementById("popup");
+const popupDate = document.getElementById("popupDate");
+const noteText = document.getElementById("noteText");
+
+let now = new Date();
+let currentMonth = now.getMonth();
+let currentYear = now.getFullYear();
+let today = now.getDate();
+let notes = JSON.parse(localStorage.getItem("loveNotes") || "{}");
+
+function renderCalendar(){
+  calendar.innerHTML = "";
+  monthYear.innerText = new Date(currentYear,currentMonth).toLocaleString('default',{month:'long',year:'numeric'});
+
+  const firstDay = new Date(currentYear,currentMonth,1).getDay();
+  const daysInMonth = new Date(currentYear,currentMonth+1,0).getDate();
+
+  // empty days
+  for(let i=0;i<firstDay;i++){
+    calendar.innerHTML += `<div class="day empty"></div>`;
+  }
+
+  for(let d=1; d<=daysInMonth; d++){
+    const key = `${currentYear}-${currentMonth+1}-${d}`;
+    let cls="day";
+    if(d===today && currentMonth===now.getMonth() && currentYear===now.getFullYear()) cls+=" today";
+    if(notes[key]) cls+=" marked";
+    calendar.innerHTML += `<div class="${cls}" onclick="openPopup(${d})">${d}</div>`;
+  }
+}
+
+let selectedDay;
+function openPopup(day){
+  selectedDay = day;
+  const key = `${currentYear}-${currentMonth+1}-${day}`;
+  popup.style.display="flex";
+  popupDate.innerText = `${day}/${currentMonth+1}/${currentYear}`;
+  noteText.value = notes[key] || "";
+}
+
+function closePopup(){ popup.style.display="none"; }
+
+function saveNote(){
+  const key = `${currentYear}-${currentMonth+1}-${selectedDay}`;
+  notes[key] = noteText.value;
+  localStorage.setItem("loveNotes",JSON.stringify(notes));
+  closePopup();
+  renderCalendar();
+}
+
+function prevMonth(){ currentMonth--; if(currentMonth<0){currentMonth=11; currentYear--; } renderCalendar(); }
+function nextMonth(){ currentMonth++; if(currentMonth>11){currentMonth=0; currentYear++; } renderCalendar(); }
+
+renderCalendar();
+</script>
+
+</body>
+</html>

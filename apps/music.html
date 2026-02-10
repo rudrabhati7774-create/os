@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Music</title>
+
+<link rel="stylesheet" href="../css/phone.css">
+<link rel="stylesheet" href="../css/music.css">
+</head>
+
+<body>
+
+<div class="phone music-app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <span onclick="history.back()">⬅</span>
+    <span>Music 🎶</span>
+    <span></span>
+  </div>
+
+  <!-- PLAYER -->
+  <div class="music-body">
+    <div class="cover"></div>
+
+    <h3>My Love Song 💖</h3>
+    <p>For You</p>
+
+    <div class="controls">
+      <button onclick="prev()">⏮</button>
+      <button onclick="play()">▶</button>
+      <button onclick="pause()">⏸</button>
+      <button onclick="next()">⏭</button>
+    </div>
+
+    <audio id="player" src="/2.mp4"></audio>
+    <audio id="player" src="/3.mp4"></audio>
+    <audio id="player" src="/4.mp4"></audio>
+    <audio id="player" src="/5.mp4"></audio>
+    <audio id="player" src="/10.mp4"></audio>
+  </div>
+
+</div>
+
+<script src="../js/music.js"></script>
+<script src="../js/system.js"></script>
+</body>
+</html>

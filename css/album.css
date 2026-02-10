@@ -4,6 +4,23 @@
   height:100%;
   background:#000;
 }
+.upload-bar {
+  padding: 10px;
+  text-align: center;
+}
+
+.upload-btn {
+  background: #ff4f9a;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.upload-btn input {
+  display: none;
+}
 
 /* TOP BAR */
 .topbar{
@@ -13,7 +30,7 @@
   justify-content:space-between;
   padding:0 14px;
   font-size:16px;
-  background:#000;
+  background:transparent;
 }
 
 /* GRID – REAL PHONE STYLE */
@@ -40,22 +57,23 @@
 
 
 /* VIEWER */
-.viewer{
-  position:fixed;
-  inset:0;
-  background:#000;
-  display:none;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  z-index:999;
+.viewer {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 999;
 }
 
-.viewer img{
-  max-width:100%;
-  max-height:100%;
-  object-fit:contain;   /* fullscreen me cut na ho */
+.viewer img {
+  max-width: 90%;
+  max-height: 80%;
+  border-radius: 10px;
 }
+
 
 
 /* BOTTOM BAR */

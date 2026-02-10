@@ -18,11 +18,18 @@
     <span>Photos</span>
     <span></span>
   </div>
-
+<div class="upload-bar">
+  <label class="upload-btn">
+    ➕ Upload
+    <input type="file" accept="image/*" multiple onchange="uploadImages(this)">
+  </label>
+</div>
   <!-- GRID -->
   <div class="grid" id="grid"></div>
 
 </div>
+<!-- UPLOAD BUTTON -->
+
 
 <!-- FULL VIEW -->
 <div class="viewer" id="viewer">

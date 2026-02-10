@@ -1,51 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="../css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Chat App 💖</title>
+<style>
+body{margin:0;padding:0;font-family:system-ui;background:#f6f0f4;display:flex;justify-content:center;align-items:center;height:100vh;}
+.chat-container{width:400px;height:600px;background:#1b1b26;border-radius:20px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 25px rgba(0,0,0,.3);}
+.header{padding:15px;background:#ff4f8b;color:white;font-weight:600;text-align:center;font-size:18px;}
+#messages{flex:1;padding:15px;overflow-y:auto;background:#2a2a36;}
+.message{margin-bottom:10px;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.2);color:white;max-width:80%;}
+.message.self{background:#ff4f8b;align-self:flex-end;color:white;}
+.message .name{font-weight:600;margin-bottom:4px;display:block;font-size:14px;}
+#inputArea{display:flex;padding:10px;background:#1f1f2b;}
+#msgInput{flex:1;padding:10px;border-radius:14px;border:none;outline:none;margin-right:10px;}
+#sendBtn{padding:10px 15px;border:none;border-radius:14px;background:#ff4f8b;color:white;font-weight:600;cursor:pointer;}
+</style>
 </head>
-<body class="appPage">
+<body>
 
-<h2>Messages 💬</h2>
-<p>My Love: I’m always with you ❤️</p>
-<script>
-/* GLOBAL WALLPAPER */
-const wp = localStorage.getItem("wallpaper");
-if(wp){
-  document.body.style.background =
-    `url(${wp}) center/cover no-repeat`;
-}else{
-  document.body.style.background =
-    "linear-gradient(135deg,#ff5fa2,#ff9ecf)";
-}
+<div class="chat-container">
+  <div class="header">💖 Chat App</div>
+  <div id="messages"></div>
+  <div id="inputArea">
+    <input id="msgInput" placeholder="Type your message 💬"/>
+    <button id="sendBtn">Send</button>
+  </div>
+</div>
 
-/* GLOBAL BRIGHTNESS OVERLAY */
-const br = localStorage.getItem("brightness") || 100;
-const overlay = document.createElement("div");
-overlay.style.position="fixed";
-overlay.style.inset=0;
-overlay.style.pointerEvents="none";
-overlay.style.background=`rgba(0,0,0,${(120-br)/120})`;
-document.body.appendChild(overlay);
-</script>
+<!-- ✅ Supabase Library FIRST -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.12.0/dist/supabase.min.js"></script>
 <script>
-function back(){
-  document.body.classList.add("backOut");
-  setTimeout(()=>history.back(),180);
-}
-</script>
+window.onload = function(){
+  // 🔥 Supabase Config
+  const SUPABASE_URL = "https://fyipcztnspvxvsmujwmn.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ5aXBjenRuc3B2eHZzbXVqd21uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3MjYyNDgsImV4cCI6MjA4NjMwMjI0OH0.ER309SagyT8NpYFG69_Eq6prQNUBByLj3BzaB9GIdFg";
 
-<button onclick="back()">Back</button>
-<script>
-function back(){ history.back(); }
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const messagesDiv = document.getElementById("messages");
+  const msgInput = document.getElementById("msgInput");
+  const sendBtn = document.getElementById("sendBtn");
+
+  let userName = prompt("Enter your name 💖") || "Anonymous";
+
+  // ✅ Load existing messages
+  async function loadMessages(){
+    const {data,error} = await supabaseClient.from("messages").select("*").order("created_at",{ascending:true});
+    if(error) return console.error("Load Error:",error);
+    messagesDiv.innerHTML="";
+    data.forEach(msg=>appendMessage(msg));
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  // ✅ Realtime subscription
+  supabaseClient.from("messages").on("INSERT", payload => {
+    appendMessage(payload.new);
+  }).subscribe();
+
+  // ✅ Append message to chat
+  function appendMessage(msg){
+    const div = document.createElement("div");
+    div.className="message";
+    if(msg.name===userName) div.classList.add("self");
+    div.innerHTML=`<span class="name">${msg.name}</span>${msg.text}`;
+    messagesDiv.appendChild(div);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  // ✅ Send message
+  async function sendMsg(){
+    const text = msgInput.value.trim();
+    if(!text) return;
+    const {data,error} = await supabaseClient.from("messages").insert([{name:userName,text}]);
+    if(error) console.error("Insert Error:",error);
+    msgInput.value="";
+  }
+
+  sendBtn.onclick = sendMsg;
+  msgInput.addEventListener("keypress",e=>{if(e.key==="Enter") sendMsg();});
+
+  loadMessages();
+};
 </script>
-<script>
-function back(){
-  document.body.classList.add("backOut");
-  setTimeout(()=>history.back(),180);
-}
-</script>
-<div id="brightnessLayer"></div>
 
 </body>
 </html>
