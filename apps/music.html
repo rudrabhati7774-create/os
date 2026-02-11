@@ -1,48 +1,280 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Music</title>
+<title>Love OS Music 💖</title>
+<style>
+  body {
+    margin:0; padding:0; font-family: 'Segoe UI', sans-serif; background: #ffe6f0; color:#333;
+  }
+  .music-app {
+    display:flex; flex-direction:column; align-items:center; padding:10px;
+  }
+  .topbar {
+    width:100%; display:flex; justify-content:space-between; background:#ffb6c1; color:white; font-weight:bold; font-size:16px; padding:10px; border-radius:10px;
+  }
+  .music-body { display:flex; flex-direction:column; align-items:center; width:100%; max-width:400px; }
+  .cover {
+    width:200px; height:200px; background:#ccc url('../assets/photos/1.jpeg') center/cover no-repeat; border-radius:15px; margin:10px;
+  }
+  video, audio { margin:10px; border-radius:15px; }
+  .controls button {
+    font-size:24px; margin:5px; padding:10px 15px; border:none; border-radius:10px; background:#ff99bb; color:white; cursor:pointer; transition:0.2s;
+  }
+  .controls button:hover { background:#ff66aa; }
+  .playlist { width:100%; margin-top:20px; }
+  .playlist ul { list-style:none; padding:0; width:100%; }
+  .playlist li { padding:8px 10px; margin:5px 0; background:#ffcce0; border-radius:8px; cursor:pointer; }
+  .playlist li:hover { background:#ffb3d9; }
+  .upload { margin-top:20px; text-align:center; }
+  .dancing-gif img { width:120px; height:120px; animation:bounce 1.5s infinite; margin:10px; }
+  .heart { font-size:40px; margin:10px 0; animation:pulse 1s infinite; transform-origin:center; }
+  @keyframes pulse { 0%{transform:scale(1);}50%{transform:scale(1.4);}100%{transform:scale(1);} }
+  @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);} }
 
-<link rel="stylesheet" href="../css/phone.css">
-<link rel="stylesheet" href="../css/music.css">
+  /* Modal */
+  .modal {
+    display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);
+  }
+  .modal-content {
+    background-color:#ffe6f0; margin:10% auto; padding:20px; border-radius:15px; width:80%; max-width:400px; display:flex; flex-direction:column; gap:10px;
+  }
+  .modal-content input { padding:8px; border-radius:8px; border:1px solid #ffb6c1; }
+  .modal-content button { padding:10px; background:#ff99bb; color:white; border:none; border-radius:8px; cursor:pointer; }
+  .modal-content button:hover { background:#ff66aa; }
+  .album-picker { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-top:10px; max-height:150px; overflow-y:auto; }
+  .album-picker img { width:100%; height:60px; object-fit:cover; border-radius:8px; cursor:pointer; border:2px solid transparent; transition:0.2s; }
+  .album-picker img.selected { border-color:#ff66aa; }
+</style>
 </head>
-
 <body>
 
-<div class="phone music-app">
+<div class="music-app">
 
-  <!-- TOP BAR -->
   <div class="topbar">
-    <span onclick="history.back()">⬅</span>
+    <span onclick="prevSong()">⬅</span>
     <span>Music 🎶</span>
-    <span></span>
+    <span onclick="nextSong()">➡</span>
   </div>
 
-  <!-- PLAYER -->
   <div class="music-body">
-    <div class="cover"></div>
 
-    <h3>My Love Song 💖</h3>
-    <p>For You</p>
+    <div class="dancing-gif">
+      <img src="../assets/gifs/music.gif" alt="Dancing GIF">
+    </div>
+    <div class="heart" id="heart">❤️</div>
+
+    <div class="cover" id="cover"></div>
+
+    <video id="videoPlayer" width="200" height="200" style="display:none;" controls></video>
+    <audio id="audioPlayer" style="display:none;"></audio>
+
+    <h3 id="song-title">My Love Song 💖</h3>
+    <p id="song-artist">For You</p>
 
     <div class="controls">
-      <button onclick="prev()">⏮</button>
-      <button onclick="play()">▶</button>
-      <button onclick="pause()">⏸</button>
-      <button onclick="next()">⏭</button>
+      <button onclick="prevSong()">⏮</button>
+      <button onclick="playSong()">▶</button>
+      <button onclick="pauseSong()">⏸</button>
+      <button onclick="nextSong()">⏭</button>
     </div>
 
-    <audio id="player" src="/2.mp4"></audio>
-    <audio id="player" src="/3.mp4"></audio>
-    <audio id="player" src="/4.mp4"></audio>
-    <audio id="player" src="/5.mp4"></audio>
-    <audio id="player" src="/10.mp4"></audio>
+    <div class="playlist">
+      <h4>Playlist</h4>
+      <ul id="playlist"></ul>
+    </div>
+
+    <div class="upload">
+      <button id="uploadBtn">📤 Upload File</button>
+      <input type="file" id="uploadInput" accept="audio/*,video/*" style="display:none;">
+    </div>
+
   </div>
 
 </div>
 
-<script src="../js/music.js"></script>
-<script src="../js/system.js"></script>
+<!-- Upload Modal -->
+<div id="uploadModal" class="modal">
+  <div class="modal-content">
+    <h3>Upload Your Song/Video</h3>
+    <label>Song Name:</label>
+    <input type="text" id="songName" placeholder="Enter song name">
+    <label>Artist Name:</label>
+    <input type="text" id="artistName" placeholder="Enter artist name">
+
+    <label>Choose Cover Image:</label>
+    <button id="openAlbum">📂 Choose from Album</button>
+    <input type="file" id="coverInput" accept="image/*" style="display:none;">
+    <div id="albumPicker" class="album-picker"></div>
+
+    <button id="submitUpload">Upload</button>
+    <button id="cancelUpload">Cancel</button>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+let songs = [
+  { title: "My Love Song 💖", artist: "For You", src: "../music/1.mp3", cover: "../assets/photos/1.jpeg", type: "video" },
+  { title: "Romantic Video 🌹", artist: "Love OS", src: "../music/2.mp3", cover: "../assets/photos/2.jpeg", type: "video" },
+  { title: "Forever Us 💞", artist: "Rudra & Ishika", src: "../music/3.mp3", cover: "../assets/photos/3.jpeg", type: "audio" },
+  { title: "Sweet Melody 🎵", artist: "Heart Beats", src: "../music/4.mp3", cover: "../assets/photos/4.jpeg", type: "video" },
+  { title: "Our Memories 🌹", artist: "Love OS", src: "../music/5.mp3", cover: "../assets/photos/5.jpeg", type: "audio" },
+  { title: "Forever Together 💖", artist: "Rudra & Ishika", src: "../music/6.mp3", cover: "../assets/photos/6.jpeg", type: "audio" },
+  { title: "Heartbeat 💓", artist: "Love OS", src: "../music/7.mp3", cover: "../assets/photos/7.jpeg", type: "audio" },
+  { title: "Endless Love 💘", artist: "For You", src: "../music/8.mp3", cover: "../assets/photos/8.jpeg", type: "audio" },
+  { title: "You & Me 🌸", artist: "Heart Beats", src: "../music/10.mp3", cover: "../assets/photos/9.jpeg", type: "audio" },
+  { title: "Moonlight Romance 🌙", artist: "Love OS", src: "../music/11.mp3", cover: "../assets/photos/10.jpeg", type: "audio" },
+  { title: "Warm Hug 🤗", artist: "Rudra & Ishika", src: "../music/12.mp3", cover: "../assets/photos/11.jpeg", type: "audio" },
+  { title: "Sweet Whisper 💌", artist: "Love OS", src: "../music/13.mp3", cover: "../assets/photos/12.jpeg", type: "audio" },
+  { title: "Night Sky ✨", artist: "Heart Beats", src: "../music/14.mp3", cover: "../assets/photos/13.jpeg", type: "audio" },
+  { title: "Together Forever 🌹", artist: "For You", src: "../music/15.mp3", cover: "../assets/photos/14.jpeg", type: "audio" },
+  { title: "My Valentine 💕", artist: "Love OS", src: "../music/16.mp3", cover: "../assets/photos/15.jpeg", type: "audio" },
+  { title: "Loving You Always 💖", artist: "Rudra & Ishika", src: "../music/17.mp3", cover: "../assets/photos/16.jpeg", type: "audio" },
+  { title: "Candlelight 💡", artist: "Heart Beats", src: "../music/18.mp3", cover: "../assets/photos/17.jpeg", type: "audio" },
+  { title: "Kiss Me 🌸", artist: "Love OS", src: "../music/19.mp3", cover: "../assets/photos/18.jpeg", type: "audio" },
+  { title: "Endless Dreams 🌙", artist: "For You", src: "../music/20.mp3", cover: "../assets/photos/19.jpeg", type: "audio" },
+  { title: "Heart Strings 💓", artist: "Rudra & Ishika", src: "../music/21.mp3", cover: "../assets/photos/20.jpeg", type: "audio" },
+
+  // 21-40 new songs
+  { title: "Always With You 💞", artist: "Love OS", src: "../music/22.mp3", cover: "../assets/photos/1.jpeg", type: "audio" },
+  { title: "Sweet Romance 🌹", artist: "For You", src: "../music/23.mp3", cover: "../assets/photos/2.jpeg", type: "audio" },
+  { title: "Your Smile 😊", artist: "Heart Beats", src: "../music/24.mp3", cover: "../assets/photos/3.jpeg", type: "audio" },
+  { title: "Forever Mine 💖", artist: "Rudra & Ishika", src: "../music/25.mp3", cover: "../assets/photos/4.jpeg", type: "audio" },
+  { title: "Love Notes 💌", artist: "Love OS", src: "../music/26.mp3", cover: "../assets/photos/5.jpeg", type: "audio" },
+  { title: "Magic Moments ✨", artist: "For You", src: "../music/27.mp3", cover: "../assets/photos/6.jpeg", type: "audio" },
+  { title: "Dreaming Of You 🌙", artist: "Heart Beats", src: "../music/28.mp3", cover: "../assets/photos/7.jpeg", type: "audio" },
+  { title: "Hug Me 🤗", artist: "Rudra & Ishika", src: "../music/29.mp3", cover: "../assets/photos/8.jpeg", type: "audio" },
+  { title: "Soft Kisses 💋", artist: "Love OS", src: "../music/30.mp3", cover: "../assets/photos/9.jpeg", type: "audio" },
+  { title: "Sunset Love 🌅", artist: "For You", src: "../music/31.mp3", cover: "../assets/photos/10.jpeg", type: "audio" },
+  { title: "Pure Heart 💓", artist: "Heart Beats", src: "../music/32.mp3", cover: "../assets/photos/11.jpeg", type: "audio" },
+  { title: "Sweet Memories 🌸", artist: "Rudra & Ishika", src: "../music/33.mp3", cover: "../assets/photos/12.jpeg", type: "audio" },
+  { title: "Forever Us 💞", artist: "Love OS", src: "../music/34.mp3", cover: "../assets/photos/13.jpeg", type: "audio" },
+  { title: "Love Story 📖", artist: "For You", src: "../music/35.mp3", cover: "../assets/photos/14.jpeg", type: "audio" },
+  { title: "My Everything 💖", artist: "Heart Beats", src: "../music/36.mp3", cover: "../assets/photos/15.jpeg", type: "audio" },
+  { title: "Sweetheart 🌹", artist: "Rudra & Ishika", src: "../music/37.mp3", cover: "../assets/photos/16.jpeg", type: "audio" },
+  { title: "Only You 💕", artist: "Love OS", src: "../music/38.mp3", cover: "../assets/photos/17.jpeg", type: "audio" },
+  { title: "Together Always 💞", artist: "For You", src: "../music/39.mp3", cover: "../assets/photos/18.jpeg", type: "audio" },
+  { title: "My True Love 💖", artist: "Heart Beats", src: "../music/40.mp3", cover: "../assets/photos/19.jpeg", type: "audio" },
+  { title: "Love Infinity ♾️", artist: "Rudra & Ishika", src: "../music/9.mp3", cover: "../assets/photos/20.jpeg", type: "audio" }
+];
+
+
+let currentSong=0;
+const audioPlayer=document.getElementById('audioPlayer');
+const videoPlayer=document.getElementById('videoPlayer');
+const cover=document.getElementById('cover');
+const title=document.getElementById('song-title');
+const artist=document.getElementById('song-artist');
+const playlistEl=document.getElementById('playlist');
+const uploadBtn=document.getElementById('uploadBtn');
+const uploadInput=document.getElementById('uploadInput');
+const heart=document.getElementById('heart');
+
+const modal=document.getElementById('uploadModal');
+const songNameInput=document.getElementById('songName');
+const artistNameInput=document.getElementById('artistName');
+const coverInput=document.getElementById('coverInput');
+const openAlbumBtn=document.getElementById('openAlbum');
+const albumPicker=document.getElementById('albumPicker');
+const submitUpload=document.getElementById('submitUpload');
+const cancelUpload=document.getElementById('cancelUpload');
+
+let uploadedFile=null;
+let selectedCover=null;
+
+const albumImages=[
+"../assets/photos/1.jpeg","../assets/photos/2.jpeg","../assets/photos/3.jpeg","../assets/photos/4.jpeg","../assets/photos/5.jpeg",
+"../assets/photos/6.jpeg","../assets/photos/7.jpeg","../assets/photos/8.jpeg","../assets/photos/9.jpeg","../assets/photos/10.jpeg",
+"../assets/photos/11.jpeg","../assets/photos/12.jpeg","../assets/photos/13.jpeg","../assets/photos/14.jpeg","../assets/photos/15.jpeg",
+"../assets/photos/16.jpeg","../assets/photos/17.jpeg","../assets/photos/18.jpeg","../assets/photos/19.jpeg","../assets/photos/20.jpeg"
+];
+
+function loadStoredSongs(){
+  const stored=localStorage.getItem('loveOS_songs');
+  if(stored){songs=songs.concat(JSON.parse(stored));}
+}
+
+function saveSongs(){
+  const userSongs=songs.slice(4);
+  localStorage.setItem('loveOS_songs',JSON.stringify(userSongs));
+}
+
+function loadPlaylist(){
+  playlistEl.innerHTML='';
+  songs.forEach((song,index)=>{
+    const li=document.createElement('li');
+    li.textContent=song.title;
+    li.onclick=()=>{currentSong=index; loadSong(); playSong();}
+    playlistEl.appendChild(li);
+  });
+}
+
+function loadSong(){
+  if(!songs[currentSong]) return;
+  const song=songs[currentSong];
+  title.textContent=song.title;
+  artist.textContent=song.artist;
+
+  if(song.type==="audio"){
+    audioPlayer.src=song.src;
+    audioPlayer.style.display="block";
+    videoPlayer.style.display="none";
+    cover.style.backgroundImage=`url('${song.cover}')`;
+  }else{
+    videoPlayer.src=song.src;
+    videoPlayer.style.display="block";
+    audioPlayer.style.display="none";
+    cover.style.backgroundImage=`url('${song.cover}')`;
+  }
+}
+
+function playSong(){const song=songs[currentSong]; if(!song) return; if(song.type==="audio") audioPlayer.play(); else videoPlayer.play(); heart.style.animation='pulse 1s infinite';}
+function pauseSong(){const song=songs[currentSong]; if(!song) return; if(song.type==="audio") audioPlayer.pause(); else videoPlayer.pause(); heart.style.animation='none';}
+function nextSong(){currentSong=(currentSong+1)%songs.length; loadSong(); playSong();}
+function prevSong(){currentSong=(currentSong-1+songs.length)%songs.length; loadSong(); playSong();}
+
+// Upload
+uploadBtn.addEventListener('click',()=>uploadInput.click());
+uploadInput.addEventListener('change',(e)=>{uploadedFile=e.target.files[0]; if(uploadedFile) modal.style.display='block';});
+cancelUpload.addEventListener('click',()=>{
+  modal.style.display='none'; uploadedFile=null; selectedCover=null; songNameInput.value=''; artistNameInput.value=''; coverInput.value=''; albumPicker.style.display='none';
+});
+
+// Album picker
+openAlbumBtn.addEventListener('click',()=>{
+  albumPicker.innerHTML='';
+  albumImages.forEach(src=>{
+    const img=document.createElement('img');
+    img.src=src;
+    img.onclick=()=>{document.querySelectorAll('.album-picker img').forEach(i=>i.classList.remove('selected')); img.classList.add('selected'); selectedCover=src;}
+    albumPicker.appendChild(img);
+  });
+  albumPicker.style.display='grid';
+});
+
+// Submit upload
+submitUpload.addEventListener('click',()=>{
+  if(!uploadedFile) return alert("Please select a file!");
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const fileURL=e.target.result;
+    const type=uploadedFile.type.startsWith('video')?"video":"audio";
+    const coverURL=selectedCover||(coverInput.files[0]?URL.createObjectURL(coverInput.files[0]):"../assets/photos/1.jpeg");
+    songs.push({title:songNameInput.value||uploadedFile.name,artist:artistNameInput.value||"Uploaded",src:fileURL,cover:coverURL,type:type});
+    loadPlaylist(); saveSongs(); modal.style.display='none'; uploadedFile=null; selectedCover=null; songNameInput.value=''; artistNameInput.value=''; coverInput.value=''; albumPicker.style.display='none'; alert("Song uploaded!");
+  }
+  reader.readAsDataURL(uploadedFile);
+});
+
+loadStoredSongs(); loadSong(); loadPlaylist();
+
+// Expose globally
+window.playSong=playSong; window.pauseSong=pauseSong; window.nextSong=nextSong; window.prevSong=prevSong;
+
+});
+</script>
+
 </body>
 </html>

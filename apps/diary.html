@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love OS Daily Diary 📖</title>
+<style>
+  body {
+    margin:0; padding:0; font-family:'Segoe UI',sans-serif;
+    background:#fff0f5; color:#333;
+  }
+
+  .diary-app {
+    max-width:480px; margin:0 auto; padding:15px;
+    background:#ffe6f0; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    min-height:100vh; display:flex; flex-direction:column;
+  }
+
+  .topbar {
+    display:flex; align-items:center; padding:10px; background:#ffb6c1;
+    color:white; font-weight:bold; border-radius:10px; margin-bottom:15px;
+  }
+
+  .topbar span {
+    cursor:pointer;
+  }
+
+  .topbar h2 {
+    flex:1; text-align:center; margin:0; font-size:18px;
+  }
+
+  textarea {
+    width:100%; flex:1; padding:10px; border-radius:10px; border:1px solid #ffb6c1;
+    resize:none; font-size:16px; margin-bottom:10px;
+  }
+
+  .entry-buttons {
+    display:flex; justify-content:space-between; margin-bottom:15px;
+  }
+
+  .entry-buttons button {
+    padding:10px 15px; border:none; border-radius:10px; background:#ff99bb;
+    color:white; font-weight:bold; cursor:pointer; transition:0.2s; flex:1; margin:0 5px;
+  }
+
+  .entry-buttons button:hover { background:#ff66aa; }
+
+  .entries {
+    flex:1; overflow-y:auto;
+  }
+
+  .entries h3 { color:#ff66aa; margin-bottom:10px; }
+  .entries ul { list-style:none; padding:0; margin:0; }
+  .entries li {
+    background:#ffcce0; margin-bottom:8px; padding:8px 10px; border-radius:8px; cursor:pointer;
+    transition:0.2s;
+  }
+  .entries li:hover { background:#ffb3d9; }
+
+  /* Responsive */
+  @media (max-width: 500px) {
+    .diary-app { padding:10px; }
+    .topbar h2 { font-size:16px; }
+    textarea { font-size:14px; }
+    .entry-buttons button { padding:8px 10px; font-size:14px; }
+    .entries li { font-size:14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="diary-app">
+  <div class="topbar">
+    <span onclick="goHome()">⬅</span>
+    <h2>Daily Diary 📖</h2>
+    <span></span>
+  </div>
+
+  <textarea id="diaryText" placeholder="Write your thoughts here..."></textarea>
+
+  <div class="entry-buttons">
+    <button id="saveBtn">💾 Save</button>
+    <button id="clearBtn">🗑 Clear</button>
+  </div>
+
+  <div class="entries">
+    <h3>Previous Entries</h3>
+    <ul id="entriesList"></ul>
+  </div>
+</div>
+
+<script>
+// Go back to home page
+function goHome() {
+  window.location.href = "../home.html"; // change path to your Love OS home page
+}
+
+// Helper to get today's date string
+function getTodayKey() {
+  const today = new Date();
+  return today.toISOString().slice(0,10); // YYYY-MM-DD
+}
+
+const diaryText = document.getElementById('diaryText');
+const saveBtn = document.getElementById('saveBtn');
+const clearBtn = document.getElementById('clearBtn');
+const entriesList = document.getElementById('entriesList');
+
+// Load today's entry
+function loadToday() {
+  const key = getTodayKey();
+  const saved = localStorage.getItem('diary_' + key);
+  if(saved) diaryText.value = saved;
+}
+loadToday();
+
+// Auto-save
+diaryText.addEventListener('input', ()=>{
+  const key = getTodayKey();
+  localStorage.setItem('diary_' + key, diaryText.value);
+  loadEntries();
+});
+
+// Save manually
+saveBtn.addEventListener('click', ()=>{
+  const key = getTodayKey();
+  localStorage.setItem('diary_' + key, diaryText.value);
+  alert("Entry saved!");
+  loadEntries();
+});
+
+// Clear today's entry
+clearBtn.addEventListener('click', ()=>{
+  const key = getTodayKey();
+  localStorage.removeItem('diary_' + key);
+  diaryText.value = '';
+  loadEntries();
+});
+
+// Load all previous entries
+function loadEntries() {
+  entriesList.innerHTML = '';
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('diary_')).sort().reverse();
+  keys.forEach(key=>{
+    const date = key.replace('diary_','');
+    const li = document.createElement('li');
+    li.textContent = date;
+    li.onclick = ()=>{ diaryText.value = localStorage.getItem(key); };
+    entriesList.appendChild(li);
+  });
+}
+loadEntries();
+</script>
+
+</body>
+</html>
