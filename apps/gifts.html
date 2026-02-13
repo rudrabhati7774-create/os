@@ -6,6 +6,7 @@
 <title>Love OS Gifts 💝</title>
 
 <style>
+
 body{
   margin:0;
   font-family:'Segoe UI',sans-serif;
@@ -14,16 +15,31 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
+  overflow-x:hidden;
+}
+
+/* Floating Hearts */
+body::before{
+  content:"💖 💕 💗 💘 💞";
+  position:fixed;
+  font-size:40px;
+  opacity:0.1;
+  animation:float 15s linear infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(100vh);}
+  100%{transform:translateY(-100vh);}
 }
 
 /* Glass Container */
 .app{
   width:95%;
-  max-width:500px;
+  max-width:520px;
   padding:25px;
   border-radius:25px;
-  backdrop-filter:blur(15px);
-  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(20px);
+  background:rgba(255,255,255,0.2);
   box-shadow:0 8px 32px rgba(0,0,0,0.25);
 }
 
@@ -39,6 +55,7 @@ body{
 .topbar h2{
   margin:0;
   font-size:20px;
+  text-align:center;
 }
 
 .back{
@@ -51,32 +68,45 @@ body{
   display:flex;
   flex-direction:column;
   gap:15px;
+  max-height:65vh;
+  overflow-y:auto;
 }
 
+/* Scrollbar */
+.gift-list::-webkit-scrollbar{
+  width:5px;
+}
+.gift-list::-webkit-scrollbar-thumb{
+  background:white;
+  border-radius:10px;
+}
+
+/* Gift Button */
 .gift-item{
-  background:rgba(255,255,255,0.25);
+  text-decoration:none;
+  display:block;
+  background:rgba(255,255,255,0.3);
   padding:15px;
   border-radius:15px;
   text-align:center;
   color:white;
   font-weight:bold;
-  cursor:pointer;
   transition:0.3s;
   box-shadow:0 4px 15px rgba(0,0,0,0.2);
 }
 
 .gift-item:hover{
-  transform:scale(1.05);
-  background:rgba(255,255,255,0.4);
+  transform:scale(1.06);
+  background:rgba(255,255,255,0.5);
 }
 
-/* Responsive */
 @media(max-width:400px){
   .gift-item{
     padding:12px;
     font-size:14px;
   }
 }
+
 </style>
 </head>
 
@@ -84,69 +114,76 @@ body{
 
 <div class="app">
 
-  <!-- Topbar -->
   <div class="topbar">
     <div class="back" onclick="goHome()">⬅</div>
     <h2>My Special Gifts 💖</h2>
     <div></div>
   </div>
 
-  <!-- Gift Titles -->
   <div class="gift-list">
 
-    <div class="gift-item" onclick="openGift('https:/calm-chaja-acc535.netlify.app')">🌹 Firts Gift</div>
+    <a href="https://calm-chaja-acc535.netlify.app" class="gift-item" target="_blank">🌹 First Gift</a>
 
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/gift/g2')">Page Gift</div>
+    <a href="https://steady-starship-2b2109.netlify.app/gift/g2" class="gift-item" target="_blank">💌 Page Gift</a>
 
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/ng/')">💋 Rotate Frame</div>
+    <a href="https://steady-starship-2b2109.netlify.app/ng/" class="gift-item" target="_blank">💋 Rotate Frame</a>
 
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/main')">🍫 Moving Frame</div>
+    <a href="https://steady-starship-2b2109.netlify.app/main" class="gift-item" target="_blank">🍫 Moving Frame</a>
 
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/ann/logonl')">💖 Aneversiry</div>
+    <a href="https://steady-starship-2b2109.netlify.app/ann/logonl" class="gift-item" target="_blank">💖 Anniversary</a>
 
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/3d-cube-image-animation-main/l')">🎁 Cudee</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/annversery/')">🎁3D Frame</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/new/')">🎁Mera Pyar</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/gg/')">🎁Album</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/yt-player/s')">🎁 Ferrice Wheel</div>
-    <div class="gift-item" onclick="openGift('https:/venerable-caramel-a5afca.netlify.app/')">🎁 Babuu</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/yt-player/sun')">🎁 Universe</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/yt-player/munch')">🎁 Munch</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/test')">🎁 Gift</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/love-confession-website-main/')">🎁 Physical Gift</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/vanishingintolove-main/')">🎁 Physical Gift2</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/a-message-for-youu-main/')">🎁 BUbuu</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/new%20gift/index.html')">🎁 Betuuu</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/hand/')">🎁 Hand</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/ne/my')">🎁 Giftttt</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/x,y/')">🎁 HEEE</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/g2/')">🎁 Water</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/new%20year/index.html')">🎁New Year</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/mummy/')">🎁 Biwii Mummy</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/valentine/')">🎁 Valentine</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/love-certificate-main/play/')">🎁 lovee</div>
-    <div class="gift-item" onclick="openGift('https:/steady-starship-2b2109.netlify.app/surprise-her-v2-main')">🎁 Certificate</div>
+    <a href="https://steady-starship-2b2109.netlify.app/3d-cube-image-animation-main/l" class="gift-item" target="_blank">🎁 Cutee</a>
 
+    <a href="https://steady-starship-2b2109.netlify.app/annversery/" class="gift-item" target="_blank">🎁 3D Frame</a>
 
+    <a href="https://steady-starship-2b2109.netlify.app/new/" class="gift-item" target="_blank">🎁 Mera Pyar</a>
 
+    <a href="https://steady-starship-2b2109.netlify.app/gg/" class="gift-item" target="_blank">🎁 Album</a>
 
+    <a href="https://steady-starship-2b2109.netlify.app/yt-player/s" class="gift-item" target="_blank">🎡 Ferris Wheel</a>
+
+    <a href="https://venerable-caramel-a5afca.netlify.app/" class="gift-item" target="_blank">🎁 Babuu</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/yt-player/sun" class="gift-item" target="_blank">🌌 Universe</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/yt-player/munch" class="gift-item" target="_blank">🍫 Munch</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/test" class="gift-item" target="_blank">🎁 Gift</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/love-confession-website-main/" class="gift-item" target="_blank">💝 Physical Gift</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/vanishingintolove-main/" class="gift-item" target="_blank">💞 Physical Gift 2</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/a-message-for-youu-main/" class="gift-item" target="_blank">💌 Bubuu</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/new%20gift/index.html" class="gift-item" target="_blank">🎀 Betuuu</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/hand/" class="gift-item" target="_blank">🤝 Hand</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/ne/my" class="gift-item" target="_blank">🎁 Special Gift</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/x,y/" class="gift-item" target="_blank">💘 HEEE</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/g2/" class="gift-item" target="_blank">💧 Water</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/new%20year/index.html" class="gift-item" target="_blank">🎆 New Year</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/mummy/" class="gift-item" target="_blank">👩‍👧 Biwii Mummy</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/valentine/" class="gift-item" target="_blank">💘 Valentine</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/love-certificate-main/play/" class="gift-item" target="_blank">📜 Love Certificate</a>
+
+    <a href="https://steady-starship-2b2109.netlify.app/surprise-her-v2-main" class="gift-item" target="_blank">🏆 Certificate</a>
 
   </div>
 
 </div>
 
 <script>
-
-// Back to Home
 function goHome(){
-  window.location.href = "../home.html"; // change if needed
+  window.location.href = "../home.html";
 }
-
-// Open Gift Page
-function openGift(link){
-  window.location.href = link;
-}
-
 </script>
 
 </body>
