@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Puzzle Master 💖</title>
+
+<style>
+body{
+  margin:0;
+  background:#000;
+  font-family:'Segoe UI',sans-serif;
+  color:white;
+  text-align:center;
+  overflow:hidden;
+}
+
+h2{
+  color:hotpink;
+  margin-top:15px;
+}
+
+/* Solved Images Top */
+#solvedBar{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:6px;
+  padding:10px;
+}
+
+.solvedThumb{
+  width:45px;
+  height:45px;
+  border-radius:8px;
+  object-fit:cover;
+  border:2px solid hotpink;
+  box-shadow:0 0 10px hotpink;
+  animation:popIn 0.4s ease;
+}
+
+@keyframes popIn{
+  from{transform:scale(0);}
+  to{transform:scale(1);}
+}
+
+/* Puzzle Frame */
+#puzzleContainer{
+  margin:15px auto;
+  width:300px;
+  height:300px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(3,1fr);
+  border:4px solid hotpink;
+  box-shadow:0 0 25px hotpink;
+}
+
+.piece{
+  background-size:300px 300px;
+  border:1px solid #111;
+  transition:0.3s;
+}
+
+.piece.selected{
+  outline:3px solid white;
+}
+
+#info{
+  margin-top:10px;
+  font-size:18px;
+}
+
+button{
+  margin-top:10px;
+  padding:8px 15px;
+  background:hotpink;
+  border:none;
+  border-radius:10px;
+  color:white;
+  font-weight:bold;
+}
+
+/* Phase 2 */
+#finale{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:black;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:100;
+}
+
+.floatPhase{
+  position:absolute;
+  top:40%;
+  width:120px;
+  height:120px;
+  object-fit:cover;
+  border-radius:15px;
+  box-shadow:0 0 20px hotpink;
+  transition:2s ease-in-out;
+}
+
+.blast{
+  position:absolute;
+  width:180px;
+  height:180px;
+  background:radial-gradient(circle, hotpink 0%, transparent 70%);
+  border-radius:50%;
+  animation:blastAnim 0.8s ease;
+}
+
+@keyframes blastAnim{
+  from{transform:scale(0); opacity:1;}
+  to{transform:scale(2); opacity:0;}
+}
+
+#romanticText{
+  position:absolute;
+  top:65%;
+  font-size:20px;
+  color:hotpink;
+  animation:fadeIn 1s ease;
+}
+
+#finalText{
+  font-size:24px;
+  color:hotpink;
+  animation:fadeIn 2s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+
+@media(max-width:400px){
+  #puzzleContainer{
+    width:260px;
+    height:260px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h2>💖 Love Puzzle Master 💖</h2>
+
+<div id="solvedBar"></div>
+
+<div id="puzzleContainer"></div>
+
+<div id="info">
+  Level: <span id="level">1</span> / 20
+</div>
+
+<button onclick="nextLevel()">Next Level</button>
+
+<div id="finale"></div>
+
+<script>
+
+const images = [
+"../assets/photos/1.jpeg",
+"../assets/photos/2.jpeg",
+"../assets/photos/3.jpeg",
+"../assets/photos/4.jpeg",
+"../assets/photos/5.jpeg",
+"../assets/photos/6.jpeg",
+"../assets/photos/7.jpeg",
+"../assets/photos/8.jpeg",
+"../assets/photos/9.jpeg",
+"../assets/photos/10.jpeg",
+"../assets/photos/11.jpeg",
+"../assets/photos/12.jpeg",
+"../assets/photos/13.jpeg",
+"../assets/photos/14.jpeg",
+"../assets/photos/15.jpeg",
+"../assets/photos/16.jpeg",
+"../assets/photos/17.jpeg",
+"../assets/photos/18.jpeg",
+"../assets/photos/19.jpeg",
+"../assets/photos/20.jpeg"
+];
+
+const romanticMessages = [
+"💖 You are my forever.",
+"🌹 Every memory with you is magic.",
+"💘 My heart beats only for you.",
+"✨ You complete my world.",
+"💋 I fall for you every day.",
+"🌙 You are my moon in dark nights.",
+"💞 Our love is endless.",
+"🎀 You are my sweetest dream.",
+"💗 Together we are perfect.",
+"🔥 My soul belongs to you."
+];
+
+let level = parseInt(localStorage.getItem("lovePuzzleLevel")) || 1;
+let selected = [];
+let pieces = [];
+let solvedImages = [];
+
+document.getElementById("level").innerText = level;
+
+function loadPuzzle(){
+  const container = document.getElementById("puzzleContainer");
+  container.innerHTML="";
+  pieces=[];
+
+  let img = images[level-1];
+
+  for(let i=0;i<9;i++){
+    const div = document.createElement("div");
+    div.className="piece";
+    div.style.backgroundImage=`url(${img})`;
+    div.style.backgroundPosition=
+      `${-(i%3)*100}px ${-Math.floor(i/3)*100}px`;
+    div.dataset.correct=i;
+    pieces.push(div);
+  }
+
+  pieces.sort(()=>Math.random()-0.5);
+
+  pieces.forEach((piece,index)=>{
+    piece.onclick=()=>selectPiece(piece);
+    container.appendChild(piece);
+  });
+}
+
+function selectPiece(piece){
+  if(selected.length<2){
+    piece.classList.add("selected");
+    selected.push(piece);
+  }
+
+  if(selected.length===2){
+    swap(selected[0],selected[1]);
+    selected.forEach(p=>p.classList.remove("selected"));
+    selected=[];
+    checkWin();
+  }
+}
+
+function swap(a,b){
+  let tempBg=a.style.backgroundPosition;
+  a.style.backgroundPosition=b.style.backgroundPosition;
+  b.style.backgroundPosition=tempBg;
+
+  let temp=a.dataset.correct;
+  a.dataset.correct=b.dataset.correct;
+  b.dataset.correct=temp;
+}
+
+function checkWin(){
+  let win=true;
+  pieces.forEach((piece,i)=>{
+    if(piece.dataset.correct!=i) win=false;
+  });
+
+  if(win){
+    solvedImages.push(images[level-1]);
+    updateSolvedBar();
+    localStorage.setItem("lovePuzzleLevel",level);
+    alert("Level Completed 💖");
+  }
+}
+
+function updateSolvedBar(){
+  const bar=document.getElementById("solvedBar");
+  bar.innerHTML="";
+  solvedImages.forEach(src=>{
+    const img=document.createElement("img");
+    img.src=src;
+    img.className="solvedThumb";
+    bar.appendChild(img);
+  });
+}
+
+function nextLevel(){
+  if(level<20){
+    level++;
+    document.getElementById("level").innerText=level;
+    loadPuzzle();
+  }else{
+    startFinale();
+  }
+}
+
+/* PHASE 2 */
+function startFinale(){
+  const finale=document.getElementById("finale");
+  finale.style.display="flex";
+  finale.innerHTML="";
+
+  let index=0;
+
+  function nextPair(){
+
+    if(index>=images.length-1){
+      showFinalMessage();
+      return;
+    }
+
+    const img1=document.createElement("img");
+    const img2=document.createElement("img");
+
+    img1.src=images[index];
+    img2.src=images[index+1];
+
+    img1.className="floatPhase";
+    img2.className="floatPhase";
+
+    img1.style.left="-150px";
+    img2.style.right="-150px";
+
+    finale.appendChild(img1);
+    finale.appendChild(img2);
+
+    setTimeout(()=>{
+      img1.style.left="35%";
+      img2.style.right="35%";
+    },100);
+
+    setTimeout(()=>{
+      blastEffect();
+      img1.remove();
+      img2.remove();
+
+      showRomanticMessage(
+        romanticMessages[Math.floor(Math.random()*romanticMessages.length)]
+      );
+
+      index+=2;
+
+      setTimeout(()=>{
+        const msg=document.getElementById("romanticText");
+        if(msg) msg.remove();
+        nextPair();
+      },2000);
+
+    },2000);
+  }
+
+  nextPair();
+}
+
+function blastEffect(){
+  const blast=document.createElement("div");
+  blast.className="blast";
+  document.getElementById("finale").appendChild(blast);
+  setTimeout(()=>blast.remove(),800);
+}
+
+function showRomanticMessage(text){
+  const msg=document.createElement("div");
+  msg.id="romanticText";
+  msg.innerHTML=text;
+  document.getElementById("finale").appendChild(msg);
+}
+
+function showFinalMessage(){
+  const text=document.createElement("div");
+  text.id="finalText";
+  text.innerHTML="💖 Every Puzzle Piece Was Always Meant For You 💖<br><br>Just Like Us.";
+  document.getElementById("finale").appendChild(text);
+}
+
+loadPuzzle();
+
+</script>
+
+</body>
+</html>

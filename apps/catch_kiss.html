@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catch The Kiss 💋</title>
+
+<style>
+body{
+  margin:0;
+  overflow:hidden;
+  background:linear-gradient(135deg,#ff4e88,#ff99cc);
+  font-family:Poppins, sans-serif;
+  text-align:center;
+  color:white;
+}
+
+#gameArea{
+  position:relative;
+  width:100%;
+  height:100vh;
+}
+
+.glass{
+  position:absolute;
+  top:10px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(255,255,255,0.2);
+  backdrop-filter:blur(15px);
+  padding:10px 20px;
+  border-radius:20px;
+}
+
+#basket{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:50px;
+  touch-action:none;
+}
+
+.kiss{
+  position:absolute;
+  font-size:30px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="gameArea">
+
+  <div class="glass">
+    Level: <span id="level">1</span> |
+    Score: <span id="score">0</span> |
+    Target: <span id="target">5</span> |
+    ❤️ Chances: <span id="chances">3</span> |
+    🏆 Highest: <span id="highest">1</span>
+  </div>
+
+  <div id="basket">💖</div>
+
+</div>
+
+<script>
+let basket=document.getElementById("basket");
+let score=0, level=1, target=5;
+let fallSpeed=4;
+let chances=3;
+
+let highestLevel=localStorage.getItem("kiss_highest")||1;
+document.getElementById("highest").innerText=highestLevel;
+
+// Mobile Control
+document.addEventListener("touchmove",function(e){
+  let x=e.touches[0].clientX;
+  basket.style.left=x-25+"px";
+});
+
+// Desktop Control
+document.addEventListener("mousemove",function(e){
+  basket.style.left=e.clientX-25+"px";
+});
+
+function createKiss(){
+  const kiss=document.createElement("div");
+  kiss.classList.add("kiss");
+  kiss.innerHTML="💋";
+  kiss.style.left=Math.random()*(window.innerWidth-30)+"px";
+  kiss.style.top="0px";
+  document.getElementById("gameArea").appendChild(kiss);
+
+  let fall=setInterval(()=>{
+    let top=parseInt(kiss.style.top);
+    kiss.style.top=top+fallSpeed+"px";
+
+    if(top>window.innerHeight-100){
+
+      let kissRect=kiss.getBoundingClientRect();
+      let basketRect=basket.getBoundingClientRect();
+
+      if(
+        kissRect.left < basketRect.right &&
+        kissRect.right > basketRect.left
+      ){
+        score++;
+        document.getElementById("score").innerText=score;
+      }else{
+        chances--;
+        document.getElementById("chances").innerText=chances;
+
+        if(chances<=0){
+          alert("Game Over 💔");
+
+          if(level>highestLevel){
+            highestLevel=level;
+            localStorage.setItem("kiss_highest",highestLevel);
+          }
+
+          level=1;
+          score=0;
+          chances=3;
+          fallSpeed=4;
+          target=5;
+
+          document.getElementById("level").innerText=level;
+          document.getElementById("score").innerText=score;
+          document.getElementById("chances").innerText=chances;
+        }
+      }
+
+      kiss.remove();
+      clearInterval(fall);
+
+      if(score>=target){
+        level++;
+        target+=5;
+        fallSpeed+=1.2;
+
+        document.getElementById("level").innerText=level;
+        document.getElementById("target").innerText=target;
+
+        if(level>highestLevel){
+          highestLevel=level;
+          localStorage.setItem("kiss_highest",highestLevel);
+          document.getElementById("highest").innerText=highestLevel;
+        }
+      }
+    }
+  },20);
+}
+
+setInterval(createKiss,1400);
+</script>
+
+</body>
+</html>
