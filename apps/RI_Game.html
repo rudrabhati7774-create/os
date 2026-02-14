@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R ❤️ I Love Battle</title>
+
+<style>
+body{
+    margin:0;
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #1a001a, #000);
+    color:white;
+    text-align:center;
+    overflow:hidden;
+}
+
+/* Floating Hearts Background */
+body::before{
+    content:"";
+    position:fixed;
+    width:100%;
+    height:100%;
+    background: url("https://i.imgur.com/8Km9tLL.png");
+    opacity:0.05;
+    animation: bgMove 30s linear infinite;
+}
+
+@keyframes bgMove{
+    from{background-position:0 0;}
+    to{background-position:1000px 1000px;}
+}
+
+h1{
+    margin-top:20px;
+    font-size:28px;
+    background:linear-gradient(45deg,#ff4da6,#ff99cc);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 0 20px #ff4da6;
+}
+
+#turn{
+    margin-top:8px;
+    font-size:18px;
+    color:#ffb3d9;
+}
+
+/* Glass Board */
+.game-container{
+    display:flex;
+    justify-content:center;
+    margin-top:25px;
+}
+
+.board{
+    display:grid;
+    grid-template-columns:repeat(3,100px);
+    gap:12px;
+    padding:20px;
+    border-radius:25px;
+    backdrop-filter:blur(20px);
+    background:rgba(255,255,255,0.05);
+    box-shadow:0 0 40px rgba(255,77,166,0.3);
+    position:relative;
+}
+/* Glowing Letters */
+
+.cell.I{
+    color:#00e6ff;
+    text-shadow:
+        0 0 8px #00e6ff,
+        0 0 20px #00ffff,
+        0 0 35px #00ffff;
+    animation: glowI 1.5s ease-in-out infinite alternate;
+}
+
+.cell.R{
+    color:#ff4da6;
+    text-shadow:
+        0 0 8px #ff4da6,
+        0 0 20px #ff99cc,
+        0 0 35px #ff99cc;
+    animation: glowR 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glowI{
+    from{ transform:scale(1); }
+    to{ transform:scale(1.15); }
+}
+
+@keyframes glowR{
+    from{ transform:scale(1); }
+    to{ transform:scale(1.15); }
+}
+
+.cell{
+    width:100px;
+    height:100px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.07);
+    border:2px solid rgba(255,77,166,0.4);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:42px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.cell:hover{
+    background:rgba(255,77,166,0.2);
+    transform:scale(1.08);
+}
+
+.win-line{
+    position:absolute;
+    height:6px;
+    background:linear-gradient(90deg,#ff4da6,#ff99cc);
+    box-shadow:0 0 20px #ff4da6,0 0 40px #ff99cc;
+    transform-origin:left center;
+    transform:scaleX(0);
+    transition:transform 0.5s ease;
+}
+
+/* Score Card */
+.score{
+    margin-top:25px;
+    padding:12px 25px;
+    display:inline-block;
+    border-radius:20px;
+    backdrop-filter:blur(15px);
+    background:rgba(255,255,255,0.05);
+    box-shadow:0 0 20px rgba(255,77,166,0.3);
+}
+
+button{
+    margin-top:20px;
+    padding:12px 25px;
+    border:none;
+    border-radius:25px;
+    font-weight:bold;
+    background:linear-gradient(45deg,#ff4da6,#ff99cc);
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 0 20px rgba(255,77,166,0.5);
+}
+
+button:hover{
+    transform:scale(1.08);
+}
+
+#message{
+    margin-top:20px;
+    font-size:20px;
+    min-height:30px;
+    color:#ff99cc;
+}
+
+/* Floating Love Text */
+.love-text{
+    position:absolute;
+    color:#ff4da6;
+    font-size:18px;
+    animation:float 4s linear infinite;
+}
+
+@keyframes float{
+    from{transform:translateY(100vh);}
+    to{transform:translateY(-10vh);}
+}
+
+/* Mobile */
+@media(max-width:400px){
+    .board{
+        grid-template-columns:repeat(3,80px);
+    }
+    .cell{
+        width:80px;
+        height:80px;
+        font-size:30px;
+    }
+}
+</style>
+</head>
+<body>
+
+<h1>R ❤️ I Love Battle</h1>
+<div id="turn">Rudra (I) Turn</div>
+
+<div class="game-container">
+    <div class="board" id="board"></div>
+</div>
+
+<div class="score">
+    Rudra (I): <span id="scoreI">0</span> |
+    Biwii (R): <span id="scoreR">0</span>
+</div>
+
+<div id="message"></div>
+<button onclick="restartGame()">Restart Game</button>
+
+<script>
+const board=document.getElementById("board");
+const turnText=document.getElementById("turn");
+const message=document.getElementById("message");
+const scoreI=document.getElementById("scoreI");
+const scoreR=document.getElementById("scoreR");
+
+let cells=[];
+let currentPlayer="I";
+let scores={I:0,R:0};
+let gameActive=true;
+let winLine=null;
+
+const winPatterns=[
+[0,1,2],[3,4,5],[6,7,8],
+[0,3,6],[1,4,7],[2,5,8],
+[0,4,8],[2,4,6]
+];
+
+function createBoard(){
+    board.innerHTML="";
+    cells=[];
+    gameActive=true;
+    for(let i=0;i<9;i++){
+        const cell=document.createElement("div");
+        cell.classList.add("cell");
+        cell.addEventListener("click",()=>makeMove(i));
+        board.appendChild(cell);
+        cells.push("");
+    }
+    removeLine();
+    updateTurn();
+}
+createBoard();
+
+function updateTurn(){
+    turnText.innerText=currentPlayer==="I"?
+    "Rudra (I) Turn":"Biwii (R) Turn";
+}
+
+function makeMove(i){
+    if(!gameActive||cells[i]!="")return;
+    cells[i]=currentPlayer;
+    board.children[i].innerText=currentPlayer;
+    board.children[i].classList.add(currentPlayer);
+
+
+    const winIndex=checkWinner();
+    if(winIndex!==null){
+        drawLine(winIndex);
+        scores[currentPlayer]++;
+        updateScore();
+        gameActive=false;
+
+        setTimeout(()=>{
+            if(scores[currentPlayer]==2){
+                endMatch(currentPlayer);
+            }else{
+                switchPlayer();
+                createBoard();
+            }
+        },1000);
+        return;
+    }
+
+    if(!cells.includes("")){
+        gameActive=false;
+        setTimeout(createBoard,1000);
+        return;
+    }
+
+    switchPlayer();
+}
+
+function switchPlayer(){
+    currentPlayer=currentPlayer==="I"?"R":"I";
+    updateTurn();
+}
+
+function checkWinner(){
+    for(let i=0;i<winPatterns.length;i++){
+        if(winPatterns[i].every(index=>cells[index]===currentPlayer)){
+            return i;
+        }
+    }
+    return null;
+}
+
+function drawLine(i){
+    const line=document.createElement("div");
+    line.classList.add("win-line");
+
+    const map=[
+    {top:60,left:0,width:330,rotate:0},
+    {top:175,left:0,width:330,rotate:0},
+    {top:290,left:0,width:330,rotate:0},
+    {top:0,left:60,width:330,rotate:90},
+    {top:0,left:175,width:330,rotate:90},
+    {top:0,left:290,width:330,rotate:90},
+    {top:0,left:0,width:470,rotate:45},
+    {top:0,left:330,width:470,rotate:-45}
+    ];
+
+    const pos=map[i];
+    line.style.top=pos.top+"px";
+    line.style.left=pos.left+"px";
+    line.style.width=pos.width+"px";
+    line.style.transform="rotate("+pos.rotate+"deg) scaleX(1)";
+    board.appendChild(line);
+    winLine=line;
+}
+
+function removeLine(){
+    if(winLine){winLine.remove();winLine=null;}
+}
+
+function updateScore(){
+    scoreI.innerText=scores.I;
+    scoreR.innerText=scores.R;
+}
+
+function endMatch(winner){
+    if(winner==="I"){
+        message.innerText="Ek bar aur try karo Madam ji 😌";
+        setTimeout(restartGame,2000);
+    }else{
+        message.innerText="Biwii jeet gayi 😍 I Love You x100!";
+        for(let i=0;i<30;i++){
+            const love=document.createElement("div");
+            love.classList.add("love-text");
+            love.style.left=Math.random()*100+"vw";
+            love.style.animationDuration=(2+Math.random()*3)+"s";
+            love.innerText="I Love You ❤️";
+            document.body.appendChild(love);
+        }
+    }
+}
+
+function restartGame(){
+    scores={I:0,R:0};
+    currentPlayer="I";
+    message.innerText="";
+    updateScore();
+    createBoard();
+}
+</script>
+
+</body>
+</html>
