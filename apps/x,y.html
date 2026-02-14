@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Coordinate Graph 💖</title>
+
+<style>
+body{
+  margin:0;
+  background:#000;
+  overflow:hidden;
+  font-family:'Segoe UI',sans-serif;
+}
+
+#graph{
+  position:relative;
+  width:100vw;
+  height:100vh;
+}
+
+/* GRID */
+#graph::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,105,180,0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,105,180,0.15) 1px, transparent 1px);
+  background-size:7vw 7vw;
+}
+
+/* AXIS */
+.axisX,.axisY{
+  position:absolute;
+  background:hotpink;
+  box-shadow:0 0 15px hotpink;
+}
+
+.axisX{
+  height:2px;
+  width:90%;
+  bottom:10%;
+  left:10%;
+}
+
+.axisY{
+  width:2px;
+  height:90%;
+  left:10%;
+  bottom:10%;
+}
+
+/* IMAGE POINT */
+.point{
+  position:absolute;
+  border-radius:15px;
+  object-fit:cover;
+  box-shadow:0 0 20px hotpink;
+  transition:all 1.5s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+/* SVG */
+svg{
+  position:absolute;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+
+line{
+  stroke:hotpink;
+  stroke-width:2;
+  filter:drop-shadow(0 0 10px hotpink);
+  stroke-dasharray:400;
+  stroke-dashoffset:400;
+  animation:draw 1.5s forwards;
+}
+
+@keyframes draw{
+  to{stroke-dashoffset:0;}
+}
+
+/* BLAST */
+.blast{
+  position:absolute;
+  width:90px;
+  height:90px;
+  background:radial-gradient(circle, hotpink 0%, transparent 70%);
+  border-radius:50%;
+  animation:blastAnim 0.8s ease-out;
+}
+
+@keyframes blastAnim{
+  from{transform:scale(0);opacity:1;}
+  to{transform:scale(2);opacity:0;}
+}
+
+/* FINAL TEXT */
+#final{
+  position:absolute;
+  width:100%;
+  top:35%;
+  text-align:center;
+  color:hotpink;
+  font-size:6vw;
+  opacity:0;
+  text-shadow:0 0 25px hotpink;
+  animation:heartbeat 1.5s infinite;
+}
+
+#equation{
+  position:absolute;
+  width:100%;
+  top:55%;
+  text-align:center;
+  font-size:5vw;
+  color:white;
+  opacity:0;
+  text-shadow:0 0 15px hotpink;
+}
+
+@keyframes heartbeat{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.08);}
+  100%{transform:scale(1);}
+}
+</style>
+</head>
+<body>
+
+<div id="graph">
+  <div class="axisX"></div>
+  <div class="axisY"></div>
+  <svg id="svg"></svg>
+  <div id="final">💖 Perfectly Aligned Like Our Hearts 💖</div>
+  <div id="equation">Me + You = Babu 💞</div>
+</div>
+
+<script>
+
+const images=[
+"../assets/photos/1.jpeg",
+"../assets/photos/2.jpeg",
+"../assets/photos/3.jpeg",
+"../assets/photos/4.jpeg",
+"../assets/photos/5.jpeg",
+"../assets/photos/6.jpeg",
+"../assets/photos/7.jpeg",
+"../assets/photos/8.jpeg",
+"../assets/photos/9.jpeg",
+"../assets/photos/10.jpeg"
+];
+
+const graph=document.getElementById("graph");
+const svg=document.getElementById("svg");
+
+let current=1;
+let prevPoint=null;
+let imageSize;
+
+function setupSize(){
+  imageSize=Math.min(window.innerWidth,window.innerHeight)/12;
+}
+
+function getOrigin(){
+  return {
+    x: window.innerWidth*0.1,
+    y: window.innerHeight*0.9
+  };
+}
+
+function getGap(){
+  return Math.min(window.innerWidth,window.innerHeight)/12;
+}
+
+function createImage(x,y,src){
+  const img=document.createElement("img");
+  img.src=src;
+  img.className="point";
+  img.style.width=imageSize+"px";
+  img.style.height=imageSize+"px";
+  img.style.left=x+"px";
+  img.style.top=y+"px";
+  graph.appendChild(img);
+  return img;
+}
+
+function drawLine(p1,p2){
+  const line=document.createElementNS("http://www.w3.org/2000/svg","line");
+  line.setAttribute("x1",p1.x+imageSize/2);
+  line.setAttribute("y1",p1.y+imageSize/2);
+  line.setAttribute("x2",p2.x+imageSize/2);
+  line.setAttribute("y2",p2.y+imageSize/2);
+  svg.appendChild(line);
+}
+
+function blast(x,y){
+  const b=document.createElement("div");
+  b.className="blast";
+  b.style.left=(x-imageSize/2)+"px";
+  b.style.top=(y-imageSize/2)+"px";
+  graph.appendChild(b);
+  setTimeout(()=>b.remove(),800);
+}
+
+function animate(){
+
+  if(current>10){
+    document.getElementById("final").style.opacity=1;
+    document.getElementById("equation").style.opacity=1;
+    return;
+  }
+
+  const origin=getOrigin();
+  const gap=getGap();
+
+  const meetX=origin.x+gap*current;
+  const meetY=origin.y-gap*current;
+
+  const imgX=createImage(origin.x+gap*current,origin.y,images[current-1]);
+  const imgY=createImage(origin.x,origin.y-gap*current,images[current-1]);
+
+  setTimeout(()=>{
+    imgX.style.top=meetY+"px";
+    imgY.style.left=meetX+"px";
+  },100);
+
+  setTimeout(()=>{
+    blast(meetX,meetY);
+
+    const point={x:meetX,y:meetY};
+
+    if(prevPoint){
+      drawLine(prevPoint,point);
+    }
+
+    prevPoint=point;
+    current++;
+
+    setTimeout(animate,900);
+
+  },1600);
+}
+
+setupSize();
+animate();
+
+window.addEventListener("resize",()=>{
+  location.reload();
+});
+
+</script>
+
+</body>
+</html>
