@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Space Shooter 💖</title>
+
+<style>
+body{
+  margin:0;
+  overflow:hidden;
+  background:black;
+  font-family:sans-serif;
+}
+
+/* Star Background */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:radial-gradient(white 1px, transparent 1px);
+  background-size:3px 3px;
+  opacity:0.25;
+}
+
+/* Screens */
+.screen{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:hotpink;
+  text-align:center;
+}
+
+button{
+  padding:12px 25px;
+  margin:10px;
+  border:none;
+  border-radius:30px;
+  background:hotpink;
+  color:black;
+  font-weight:bold;
+  font-size:16px;
+  box-shadow:0 0 15px hotpink;
+}
+
+#ui{
+  position:absolute;
+  top:10px;
+  width:100%;
+  display:flex;
+  justify-content:space-around;
+  color:hotpink;
+  display:none;
+  z-index:5;
+}
+
+#planetScreen{
+  display:none;
+}
+
+#planetScreen img{
+  width:250px;
+  border-radius:50%;
+  box-shadow:0 0 40px hotpink;
+}
+</style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="startScreen" class="screen">
+  <h1>LOVE SPACE GAME 💖</h1>
+  <button onclick="selectMode('shooter')">🚀 Space Shooter</button>
+  <button onclick="selectMode('timeline')">🌌 Love Timeline</button>
+</div>
+
+<!-- PLAY SCREEN -->
+<div id="playScreen" class="screen" style="display:none;">
+  <h2 id="modeTitle"></h2>
+  <button onclick="startGame()">▶ PLAY GAME</button>
+  <button onclick="goBack()">⬅ Back</button>
+</div>
+
+<!-- UI -->
+<div id="ui">
+  <div>Enemies: <span id="enemyCount">0</span></div>
+  <div>Health: <span id="health">3</span></div>
+</div>
+
+<!-- PLANET SCREEN -->
+<div id="planetScreen" class="screen">
+  <img src="../assets/photos/1.jpeg">
+  <h2>🌍 Destination Reached 💕</h2>
+  <button onclick="restartGame()">🔄 Play Again</button>
+</div>
+
+<canvas id="game"></canvas>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let mode="";
+let gameRunning=false;
+let enemies=[], bullets=[], enemyBullets=[];
+let health=3;
+let enemyCount=6;
+
+const rocketImg=new Image();
+rocketImg.src="../assets/icons/rocket.png";
+
+const rocket={
+  x:100,
+  y:canvas.height/2,
+  width:70,
+  height:70
+};
+
+function selectMode(selected){
+  mode=selected;
+  document.getElementById("startScreen").style.display="none";
+  document.getElementById("playScreen").style.display="flex";
+  document.getElementById("modeTitle").innerText=
+    mode==="shooter" ? "🚀 Space Shooter Mode" : "🌌 Love Timeline Mode";
+}
+
+function goBack(){
+  document.getElementById("playScreen").style.display="none";
+  document.getElementById("startScreen").style.display="flex";
+}
+
+function startGame(){
+  document.getElementById("playScreen").style.display="none";
+
+  if(mode==="shooter"){
+    startShooter();
+  }else{
+    startTimeline();
+  }
+}
+
+function startShooter(){
+  document.getElementById("ui").style.display="flex";
+  gameRunning=true;
+  health=3;
+  document.getElementById("health").innerText=health;
+  createEnemies();
+  update();
+}
+
+function createEnemies(){
+  enemies=[];
+  for(let i=0;i<enemyCount;i++){
+    enemies.push({
+      x:canvas.width+i*200,
+      y:Math.random()*(canvas.height-60),
+      width:50,
+      height:50,
+      shootTimer:0
+    });
+  }
+  document.getElementById("enemyCount").innerText=enemies.length;
+}
+
+function shoot(){
+  bullets.push({
+    x:rocket.x+rocket.width,
+    y:rocket.y+rocket.height/2,
+    width:15,
+    height:5
+  });
+}
+
+function update(){
+  if(!gameRunning) return;
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(rocketImg,rocket.x,rocket.y,rocket.width,rocket.height);
+
+  bullets.forEach((b,i)=>{
+    b.x+=8;
+    ctx.fillStyle="hotpink";
+    ctx.fillRect(b.x,b.y,b.width,b.height);
+  });
+
+  enemyBullets.forEach((b,i)=>{
+    b.x-=6;
+    ctx.fillStyle="white";
+    ctx.fillRect(b.x,b.y,10,4);
+
+    if(
+      b.x<rocket.x+rocket.width &&
+      b.x+10>rocket.x &&
+      b.y<rocket.y+rocket.height &&
+      b.y+4>rocket.y
+    ){
+      health--;
+      document.getElementById("health").innerText=health;
+      enemyBullets.splice(i,1);
+      if(health<=0){
+        alert("Game Over 💔");
+        restartGame();
+      }
+    }
+  });
+
+  enemies.forEach((e,ei)=>{
+    e.x-=2;
+    ctx.fillStyle="white";
+    ctx.beginPath();
+    ctx.arc(e.x+25,e.y+25,25,0,Math.PI*2);
+    ctx.fill();
+
+    e.shootTimer++;
+    if(e.shootTimer>120){
+      enemyBullets.push({x:e.x,y:e.y+25});
+      e.shootTimer=0;
+    }
+
+    bullets.forEach((b,bi)=>{
+      if(
+        b.x<e.x+50 &&
+        b.x+15>e.x &&
+        b.y<e.y+50 &&
+        b.y+5>e.y
+      ){
+        enemies.splice(ei,1);
+        bullets.splice(bi,1);
+        document.getElementById("enemyCount").innerText=enemies.length;
+      }
+    });
+  });
+
+  if(enemies.length===0){
+    gameRunning=false;
+    document.getElementById("planetScreen").style.display="flex";
+    return;
+  }
+
+  requestAnimationFrame(update);
+}
+
+canvas.addEventListener("touchmove",(e)=>{
+  rocket.y=e.touches[0].clientY-rocket.height/2;
+});
+
+canvas.addEventListener("touchstart",shoot);
+
+function startTimeline(){
+  alert("🌌 Timeline Mode Coming Soon 💖");
+}
+
+function restartGame(){
+  location.reload();
+}
+</script>
+</body>
+</html>
