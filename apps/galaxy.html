@@ -2,263 +2,265 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Love Space Shooter 💖</title>
-
+<title>Love Space Shooter 3D</title>
 <style>
 body{
   margin:0;
   overflow:hidden;
   background:black;
-  font-family:sans-serif;
+  touch-action:none;
+  font-family:Arial;
 }
 
-/* Star Background */
-body::before{
-  content:"";
+#shootBtn{
   position:fixed;
-  inset:0;
-  background:radial-gradient(white 1px, transparent 1px);
-  background-size:3px 3px;
-  opacity:0.25;
-}
-
-/* Screens */
-.screen{
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  color:hotpink;
-  text-align:center;
-}
-
-button{
-  padding:12px 25px;
-  margin:10px;
-  border:none;
-  border-radius:30px;
-  background:hotpink;
-  color:black;
-  font-weight:bold;
-  font-size:16px;
-  box-shadow:0 0 15px hotpink;
-}
-
-#ui{
-  position:absolute;
-  top:10px;
-  width:100%;
-  display:flex;
-  justify-content:space-around;
-  color:hotpink;
-  display:none;
-  z-index:5;
-}
-
-#planetScreen{
-  display:none;
-}
-
-#planetScreen img{
-  width:250px;
+  bottom:40px;
+  right:30px;
+  width:70px;
+  height:70px;
   border-radius:50%;
-  box-shadow:0 0 40px hotpink;
+  border:none;
+  background:#ff1493;
+  color:white;
+  font-size:22px;
+  z-index:10;
+}
+
+#joystick{
+  position:fixed;
+  bottom:30px;
+  left:30px;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.1);
+  z-index:10;
+}
+
+#stick{
+  position:absolute;
+  width:60px;
+  height:60px;
+  background:white;
+  border-radius:50%;
+  top:30px;
+  left:30px;
+}
+
+#score{
+  position:fixed;
+  top:20px;
+  left:20px;
+  color:white;
+  font-size:18px;
+  z-index:10;
+}
+
+#gameOver{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  color:white;
+  font-size:30px;
+  display:none;
+  z-index:20;
 }
 </style>
 </head>
 <body>
 
-<!-- START SCREEN -->
-<div id="startScreen" class="screen">
-  <h1>LOVE SPACE GAME 💖</h1>
-  <button onclick="selectMode('shooter')">🚀 Space Shooter</button>
-  <button onclick="selectMode('timeline')">🌌 Love Timeline</button>
-</div>
+<div id="score">Hearts: 0 | Lives: 3</div>
+<div id="gameOver"></div>
+<div id="joystick"><div id="stick"></div></div>
+<button id="shootBtn">💘</button>
 
-<!-- PLAY SCREEN -->
-<div id="playScreen" class="screen" style="display:none;">
-  <h2 id="modeTitle"></h2>
-  <button onclick="startGame()">▶ PLAY GAME</button>
-  <button onclick="goBack()">⬅ Back</button>
-</div>
-
-<!-- UI -->
-<div id="ui">
-  <div>Enemies: <span id="enemyCount">0</span></div>
-  <div>Health: <span id="health">3</span></div>
-</div>
-
-<!-- PLANET SCREEN -->
-<div id="planetScreen" class="screen">
-  <img src="../assets/photos/1.jpeg">
-  <h2>🌍 Destination Reached 💕</h2>
-  <button onclick="restartGame()">🔄 Play Again</button>
-</div>
-
-<canvas id="game"></canvas>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
 
-let mode="";
-let gameRunning=false;
-let enemies=[], bullets=[], enemyBullets=[];
-let health=3;
-let enemyCount=6;
+let scene = new THREE.Scene();
+let camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+let renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(window.innerWidth,window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-const rocketImg=new Image();
-rocketImg.src="../assets/icons/rocket.png";
+camera.position.z = 8;
 
-const rocket={
-  x:100,
-  y:canvas.height/2,
-  width:70,
-  height:70
-};
+const loader = new THREE.TextureLoader();
 
-function selectMode(selected){
-  mode=selected;
-  document.getElementById("startScreen").style.display="none";
-  document.getElementById("playScreen").style.display="flex";
-  document.getElementById("modeTitle").innerText=
-    mode==="shooter" ? "🚀 Space Shooter Mode" : "🌌 Love Timeline Mode";
-}
+// 🚀 Rocket
+const rocketTexture = loader.load("/assets/icons/rocket.png");
+const rocketGeo = new THREE.PlaneGeometry(1.5,2);
+const rocketMat = new THREE.MeshBasicMaterial({map:rocketTexture,transparent:true});
+const rocket = new THREE.Mesh(rocketGeo,rocketMat);
+rocket.position.y = -4;
+scene.add(rocket);
 
-function goBack(){
-  document.getElementById("playScreen").style.display="none";
-  document.getElementById("startScreen").style.display="flex";
-}
+let bullets=[];
+let enemyBullets=[];
+let hearts=[];
+let killCount=0;
+let lives=3;
+let gameRunning=true;
 
-function startGame(){
-  document.getElementById("playScreen").style.display="none";
+const lanes=[-2,0,2];
 
-  if(mode==="shooter"){
-    startShooter();
-  }else{
-    startTimeline();
-  }
-}
+const scoreUI=document.getElementById("score");
+const gameOverUI=document.getElementById("gameOver");
 
-function startShooter(){
-  document.getElementById("ui").style.display="flex";
-  gameRunning=true;
-  health=3;
-  document.getElementById("health").innerText=health;
-  createEnemies();
-  update();
-}
-
-function createEnemies(){
-  enemies=[];
-  for(let i=0;i<enemyCount;i++){
-    enemies.push({
-      x:canvas.width+i*200,
-      y:Math.random()*(canvas.height-60),
-      width:50,
-      height:50,
-      shootTimer:0
-    });
-  }
-  document.getElementById("enemyCount").innerText=enemies.length;
-}
-
-function shoot(){
-  bullets.push({
-    x:rocket.x+rocket.width,
-    y:rocket.y+rocket.height/2,
-    width:15,
-    height:5
-  });
-}
-
-function update(){
+// SHOOT
+document.getElementById("shootBtn").onclick=()=>{
   if(!gameRunning) return;
 
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.drawImage(rocketImg,rocket.x,rocket.y,rocket.width,rocket.height);
+  const geo=new THREE.CylinderGeometry(0.1,0.1,1);
+  const mat=new THREE.MeshBasicMaterial({color:0xffff00});
+  const bullet=new THREE.Mesh(geo,mat);
+  bullet.position.set(rocket.position.x,rocket.position.y+1,0);
+  bullets.push(bullet);
+  scene.add(bullet);
+};
 
-  bullets.forEach((b,i)=>{
-    b.x+=8;
-    ctx.fillStyle="hotpink";
-    ctx.fillRect(b.x,b.y,b.width,b.height);
-  });
+// CREATE ENEMY HEART
+function createHeart(){
+  if(!gameRunning) return;
+  if(hearts.length>=2) return;
 
-  enemyBullets.forEach((b,i)=>{
-    b.x-=6;
-    ctx.fillStyle="white";
-    ctx.fillRect(b.x,b.y,10,4);
+  const texture = loader.load("/assets/icons/heart.png");
+  const geo = new THREE.PlaneGeometry(0.9,0.9);
+  const mat = new THREE.MeshBasicMaterial({map:texture,transparent:true});
+  const heart = new THREE.Mesh(geo,mat);
 
-    if(
-      b.x<rocket.x+rocket.width &&
-      b.x+10>rocket.x &&
-      b.y<rocket.y+rocket.height &&
-      b.y+4>rocket.y
-    ){
-      health--;
-      document.getElementById("health").innerText=health;
-      enemyBullets.splice(i,1);
-      if(health<=0){
-        alert("Game Over 💔");
-        restartGame();
-      }
-    }
-  });
+  heart.position.x = lanes[Math.floor(Math.random()*lanes.length)];
+  heart.position.y = 7;
+  heart.userData.speed = 0.05;
 
-  enemies.forEach((e,ei)=>{
-    e.x-=2;
-    ctx.fillStyle="white";
-    ctx.beginPath();
-    ctx.arc(e.x+25,e.y+25,25,0,Math.PI*2);
-    ctx.fill();
+  scene.add(heart);
+  hearts.push(heart);
 
-    e.shootTimer++;
-    if(e.shootTimer>120){
-      enemyBullets.push({x:e.x,y:e.y+25});
-      e.shootTimer=0;
-    }
+  // Enemy shooting
+  heart.userData.shootInterval = setInterval(()=>{
+    if(!hearts.includes(heart) || !gameRunning) return;
 
-    bullets.forEach((b,bi)=>{
-      if(
-        b.x<e.x+50 &&
-        b.x+15>e.x &&
-        b.y<e.y+50 &&
-        b.y+5>e.y
-      ){
-        enemies.splice(ei,1);
-        bullets.splice(bi,1);
-        document.getElementById("enemyCount").innerText=enemies.length;
-      }
-    });
-  });
+    const bGeo=new THREE.SphereGeometry(0.2,16,16);
+    const bMat=new THREE.MeshBasicMaterial({color:0xff0000});
+    const eBullet=new THREE.Mesh(bGeo,bMat);
+    eBullet.position.set(heart.position.x,heart.position.y,0);
+    enemyBullets.push(eBullet);
+    scene.add(eBullet);
 
-  if(enemies.length===0){
-    gameRunning=false;
-    document.getElementById("planetScreen").style.display="flex";
+  },2000);
+}
+
+setInterval(createHeart,1500);
+
+// JOYSTICK
+const joystick=document.getElementById("joystick");
+const stick=document.getElementById("stick");
+let moveX=0;
+
+joystick.addEventListener("touchmove",(e)=>{
+  const rect=joystick.getBoundingClientRect();
+  const touch=e.touches[0];
+  let x=touch.clientX-rect.left-60;
+
+  if(x<-40)x=-40;
+  if(x>40)x=40;
+
+  stick.style.left=(x+60-30)+"px";
+  moveX=x/20;
+});
+
+joystick.addEventListener("touchend",()=>{
+  stick.style.left="30px";
+  moveX=0;
+});
+
+// GAME LOOP
+function animate(){
+  requestAnimationFrame(animate);
+
+  if(!gameRunning){
+    renderer.render(scene,camera);
     return;
   }
 
-  requestAnimationFrame(update);
+  rocket.position.x += (moveX-rocket.position.x)*0.1;
+
+  // Player bullets
+  bullets.forEach((b,i)=>{
+    b.position.y+=0.3;
+    if(b.position.y>6){
+      scene.remove(b);
+      bullets.splice(i,1);
+    }
+  });
+
+  // Enemy bullets
+  enemyBullets.forEach((b,i)=>{
+    b.position.y-=0.15;
+
+    if(b.position.distanceTo(rocket.position)<0.8){
+      scene.remove(b);
+      enemyBullets.splice(i,1);
+      lives--;
+      updateUI();
+
+      if(lives<=0){
+        gameOver(false);
+      }
+    }
+
+    if(b.position.y<-6){
+      scene.remove(b);
+      enemyBullets.splice(i,1);
+    }
+  });
+
+  // Hearts
+  hearts.forEach((h,i)=>{
+    h.position.y-=h.userData.speed;
+    h.rotation.z+=0.02;
+
+    if(h.position.y<-6){
+      scene.remove(h);
+      hearts.splice(i,1);
+    }
+
+    bullets.forEach((b,bi)=>{
+      if(b.position.distanceTo(h.position)<0.7){
+        scene.remove(h);
+        scene.remove(b);
+        clearInterval(h.userData.shootInterval);
+
+        hearts.splice(i,1);
+        bullets.splice(bi,1);
+
+        killCount++;
+        rocket.position.y+=0.25;
+        updateUI();
+
+        if(killCount>=15){
+          gameOver(true);
+        }
+      }
+    });
+  });
+
+  renderer.render(scene,camera);
 }
 
-canvas.addEventListener("touchmove",(e)=>{
-  rocket.y=e.touches[0].clientY-rocket.height/2;
-});
+animate();
 
-canvas.addEventListener("touchstart",shoot);
-
-function startTimeline(){
-  alert("🌌 Timeline Mode Coming Soon 💖");
+function updateUI(){
+  scoreUI.innerText="Hearts: "+killCount+" | Lives: "+lives;
 }
 
-function restartGame(){
-  location.reload();
+function gameOver(win){
+  gameRunning=false;
+  gameOverUI.style.display="block";
+  gameOverUI.innerText = win ? "You Win 💖🚀" : "Game Over 💔";
 }
+
 </script>
 </body>
 </html>
