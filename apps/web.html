@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ishika Biwuu ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+:root{
+    --rose:#b76e79;
+    --lightrose:#f4c2c2;
+}
+
+body{
+    background:#0d0d0d;
+    color:var(--lightrose);
+    overflow-x:hidden;
+}
+
+/* Navbar */
+nav{
+    position:fixed;
+    width:100%;
+    padding:20px;
+    text-align:center;
+    background:rgba(0,0,0,0.9);
+    color:var(--rose);
+    font-weight:600;
+    letter-spacing:3px;
+    z-index:1000;
+}
+
+/* Hero */
+.hero{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+}
+
+.hero h1{
+    font-size:3em;
+    color:var(--rose);
+    text-shadow:0 0 25px var(--rose);
+}
+
+.hero p{
+    max-width:600px;
+    margin-top:20px;
+    font-size:1.2em;
+    opacity:0.85;
+}
+
+.btn{
+    margin-top:30px;
+    padding:15px 35px;
+    border:2px solid var(--rose);
+    background:transparent;
+    color:var(--rose);
+    border-radius:40px;
+    cursor:pointer;
+    transition:0.4s;
+}
+
+.btn:hover{
+    background:var(--rose);
+    color:black;
+    box-shadow:0 0 30px var(--rose);
+}
+
+/* Section */
+.section{
+    padding:100px 20px;
+    text-align:center;
+}
+
+.section h2{
+    color:var(--rose);
+    margin-bottom:50px;
+    font-size:2.2em;
+}
+
+/* Flip Cards */
+.cards{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:40px;
+}
+
+.flip-card{
+    background:transparent;
+    width:280px;
+    height:380px;
+    perspective:1000px;
+}
+
+.flip-card-inner{
+    position:relative;
+    width:100%;
+    height:100%;
+    transition:transform 0.8s;
+    transform-style:preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner{
+    transform:rotateY(180deg);
+}
+
+.flip-front, .flip-back{
+    position:absolute;
+    width:100%;
+    height:100%;
+    backface-visibility:hidden;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 0 25px rgba(183,110,121,0.3);
+}
+/* ============================= */
+/* RESPONSIVE DESIGN START */
+/* ============================= */
+
+@media (max-width: 1024px){
+    .hero h1{
+        font-size:2.5em;
+    }
+
+    .flip-card{
+        width:240px;
+        height:340px;
+    }
+
+    .slide img{
+        height:400px;
+    }
+}
+
+@media (max-width: 768px){
+
+    nav{
+        font-size:14px;
+        padding:15px;
+        letter-spacing:1px;
+    }
+
+    .hero{
+        height:auto;
+        padding-top:120px;
+        padding-bottom:80px;
+    }
+
+    .hero h1{
+        font-size:2em;
+    }
+
+    .hero p{
+        font-size:1em;
+    }
+
+    .btn{
+        padding:12px 25px;
+        font-size:14px;
+    }
+
+    .cards{
+        gap:25px;
+    }
+
+    .flip-card{
+        width:90%;
+        max-width:320px;
+        height:360px;
+    }
+
+    /* Timeline Mobile Fix */
+    .timeline::after{
+        left:20px;
+    }
+
+    .timeline-item{
+        width:100%;
+        padding-left:60px;
+        padding-right:20px;
+        text-align:left !important;
+        left:0 !important;
+    }
+
+    .timeline-item::before{
+        left:10px !important;
+        right:auto;
+    }
+
+    .timeline-inner{
+        height:auto;
+        min-height:140px;
+    }
+
+    /* Slider */
+    .slide img{
+        height:300px;
+    }
+
+    .overlay h3{
+        font-size:20px;
+    }
+
+    .overlay p{
+        font-size:14px;
+    }
+
+}
+
+@media (max-width: 480px){
+
+    .hero h1{
+        font-size:1.6em;
+    }
+
+    .section{
+        padding:70px 15px;
+    }
+
+    .timeline-section{
+        padding:70px 15px;
+    }
+
+    .slider-section{
+        padding:70px 15px;
+    }
+
+    .slide img{
+        height:250px;
+    }
+
+    footer{
+        font-size:14px;
+        padding:30px 15px;
+    }
+}
+
+/* ============================= */
+/* RESPONSIVE DESIGN END */
+/* ============================= */
+.flip-front img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.flip-back{
+    background:#1a1a1a;
+    color:var(--lightrose);
+    transform:rotateY(180deg);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.flip-back h3{
+    color:var(--rose);
+    margin-bottom:15px;
+}
+.timeline-section{
+    padding:100px 20px;
+    text-align:center;
+}
+
+.timeline-section h2{
+    color:var(--rose);
+    margin-bottom:60px;
+    font-size:2.2em;
+}
+
+.timeline{
+    position:relative;
+    max-width:800px;
+    margin:auto;
+}
+
+.timeline::after{
+    content:'';
+    position:absolute;
+    width:4px;
+    background:var(--rose);
+    top:0;
+    bottom:0;
+    left:50%;
+    margin-left:-2px;
+    box-shadow:0 0 15px var(--rose);
+}
+/* Overlay Text */
+.slide{
+    position:relative;
+    min-width:100%;
+}
+
+.overlay{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    color:var(--lightrose);
+    padding:30px;
+    text-align:center;
+}
+
+.overlay h3{
+    color:var(--rose);
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.overlay p{
+    font-size:16px;
+    opacity:0.9;
+}
+
+/* Smooth Fade Effect */
+.slider{
+    display:flex;
+    transition:transform 1s ease-in-out;
+}
+.timeline-item{
+    padding:20px 40px;
+    position:relative;
+    width:50%;
+    perspective:1000px;
+    cursor:pointer;
+}
+
+.timeline-item:nth-child(odd){
+    left:0;
+    text-align:right;
+}
+
+.timeline-item:nth-child(even){
+    left:50%;
+}
+
+.timeline-inner{
+    position:relative;
+    width:100%;
+    height:150px;
+    transition:transform 0.8s;
+    transform-style:preserve-3d;
+}
+
+.timeline-item.active .timeline-inner{
+    transform:rotateY(180deg);
+}
+
+.timeline-front,
+.timeline-back{
+    position:absolute;
+    width:100%;
+    height:100%;
+    backface-visibility:hidden;
+    background:#1a1a1a;
+    border-radius:15px;
+    padding:20px;
+    box-shadow:0 0 20px rgba(183,110,121,0.3);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+.timeline-front{
+    color:var(--rose);
+    font-weight:bold;
+}
+
+.timeline-back{
+    transform:rotateY(180deg);
+    background:var(--rose);
+    color:black;
+}
+
+.timeline-item::before{
+    content:'';
+    position:absolute;
+    width:20px;
+    height:20px;
+    background:var(--rose);
+    border-radius:50%;
+    top:60px;
+    right:-10px;
+    box-shadow:0 0 15px var(--rose);
+}
+
+.timeline-item:nth-child(even)::before{
+    left:-10px;
+}
+/* Floating Hearts */
+.heart{
+    position:fixed;
+    bottom:-20px;
+    font-size:20px;
+    color:var(--rose);
+    animation:float 6s linear infinite;
+}
+
+@keyframes float{
+    0%{transform:translateY(0);opacity:1;}
+    100%{transform:translateY(-100vh);opacity:0;}
+}
+
+/* Footer */
+footer{
+    padding:40px;
+    text-align:center;
+    color:var(--rose);
+    opacity:0.7;
+}
+</style>
+</head>
+
+<body>
+
+<nav>ISHIKA BIWUU ❤️ | Since 9 July 💕</nav>
+
+<section class="hero">
+    <h1>Ishika, Meri Jaan 😌💖</h1>
+    <p>
+        Official wife nahi ho abhi…  
+        par feeling pura husband-wife wali hi hai 😏  
+        Aur main ye bond lifetime ke liye chahta hoon ❤️
+    </p>
+    <button class="btn" onclick="startHearts()">Touch Here Biwuu ✨</button>
+</section>
+
+<section class="section">
+    <h2>Flip the Memories 😍</h2>
+
+    <div class="cards">
+
+        <!-- Card 1 -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-front">
+                    <img src="/assets/photos/12.jpeg">
+                </div>
+                <div class="flip-back">
+                    <h3>Teri Smile 😍</h3>
+                    <p>Jab tu hasta hai na… dil literally skip karta hai 💘</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-front">
+                    <img src="/assets/photos/11.jpeg">
+                </div>
+                <div class="flip-back">
+                    <h3>Teri Aankhein 👀</h3>
+                    <p>Main kho jaata hoon… aur honestly mujhe wapas nahi aana 😌</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-front">
+                    <img src="/assets/photos/15.jpeg">
+                </div>
+                <div class="flip-back">
+                    <h3>Our Chemistry 🔥</h3>
+                    <p>Dangerous level ki cute + hot combo hai hamari 😏❤️</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<section class="timeline-section">
+    <h2>Our Love Journey 💖</h2>
+
+    <div class="timeline">
+
+        <!-- 9 July -->
+        <div class="timeline-item" onclick="this.classList.toggle('active')">
+            <div class="timeline-inner">
+                
+                <div class="timeline-front">
+                    <div class="timeline-date">9 July ❤️</div>
+                </div>
+
+                <div class="timeline-back">
+                    <h3>The Beginning 😌</h3>
+                    <p>
+                        Iss din tum meri girlfriend bani…  
+                        aur meri duniya officially beautiful ho gayi 💕  
+                        Official wife nahi… par feel pura biwuu wala 💍
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- First 3AM -->
+        <div class="timeline-item" onclick="this.classList.toggle('active')">
+            <div class="timeline-inner">
+                
+                <div class="timeline-front">
+                    <div class="timeline-date">Our First 3AM 🌙</div>
+                </div>
+
+                <div class="timeline-back">
+                    <h3>Late Night Talks 😏</h3>
+                    <p>
+                        Sab so rahe the…  
+                        par hamari mini duniya tab start hoti hai ❤️
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- First Fight -->
+        <div class="timeline-item" onclick="this.classList.toggle('active')">
+            <div class="timeline-inner">
+                
+                <div class="timeline-front">
+                    <div class="timeline-date">First Fight 😅</div>
+                </div>
+
+                <div class="timeline-back">
+                    <h3>Roothna-Manana 💕</h3>
+                    <p>
+                        Thoda drama hua…  
+                        par us din samjha ki tu hi meri permanent hai 😌
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <section class="slider-section">
+    <h2>More Of Us 😍</h2>
+
+    <div class="slider-container">
+        <div class="slider" id="slider">
+
+            <div class="slide">
+    <img src="/assets/photos/1.jpeg">
+    <div class="overlay">
+        <h3>My Favourite Girl 😍</h3>
+        <p>Tu sirf meri girlfriend nahi… meri future biwuu energy hai 💍</p>
+    </div>
+</div>
+
+<div class="slide">
+    <img src="/assets/photos/4.jpeg">
+    <div class="overlay">
+        <h3>Late Night Talks 🌙</h3>
+        <p>3AM wali duniya sirf hamari hoti hai ❤️</p>
+    </div>
+</div>
+
+<div class="slide">
+    <img src="/assets/photos/8.jpeg">
+    <div class="overlay">
+        <h3>Teri Smile 😌</h3>
+        <p>Warning: Excess cuteness causes heart attack 💘</p>
+    </div>
+</div>
+
+<div class="slide">
+    <img src="/assets/photos/9.jpeg">
+    <div class="overlay">
+        <h3>Forever Vibes ✨</h3>
+        <p>Official nahi… par dil se lifetime wali commitment ❤️</p>
+    </div>
+</div>
+        </div>
+
+        <button class="prev" onclick="moveSlide(-1)">❮</button>
+        <button class="next" onclick="moveSlide(1)">❯</button>
+    </div>
+</section>
+</section>
+<footer>
+    Forever unofficial husband 😎❤️  
+    Only for Ishika Biwuu 💍
+</footer>
+
+<script>
+function startHearts(){
+    setInterval(()=>{
+        let heart=document.createElement("div");
+        heart.className="heart";
+        heart.innerHTML="♥";
+        heart.style.left=Math.random()*100+"vw";
+        heart.style.fontSize=(20+Math.random()*20)+"px";
+        document.body.appendChild(heart);
+        setTimeout(()=>heart.remove(),6000);
+    },300);
+}
+let currentSlide = 0;
+const slides = document.querySelectorAll(".slide");
+const slider = document.getElementById("slider");
+
+function showSlide(index){
+    slider.style.transform = `translateX(-${index * 100}%)`;
+}
+
+function nextSlide(){
+    currentSlide++;
+    if(currentSlide >= slides.length){
+        currentSlide = 0;
+    }
+    showSlide(currentSlide);
+}
+
+function moveSlide(direction){
+    currentSlide += direction;
+    if(currentSlide < 0){
+        currentSlide = slides.length - 1;
+    }
+    if(currentSlide >= slides.length){
+        currentSlide = 0;
+    }
+    showSlide(currentSlide);
+}
+
+/* AUTO SLIDE EVERY 4 SECONDS */
+setInterval(nextSlide, 4000);
+</script>
+
+</body>
+</html>
