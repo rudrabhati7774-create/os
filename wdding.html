@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Royal Wedding Invitation</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#4b000f,#7a0019);
+color:#ffd700;
+overflow-x:hidden;
+}
+
+/* HERO */
+.hero{
+min-height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+}
+
+.countdown{
+font-size:18px;
+margin-bottom:20px;
+background:rgba(255,215,0,0.1);
+padding:10px 20px;
+border-radius:30px;
+border:1px solid gold;
+}
+
+.hero h1{
+font-family:'Cinzel',serif;
+font-size:34px;
+}
+
+.names{
+font-family:'Cinzel',serif;
+font-size:26px;
+margin:15px 0;
+}
+
+.map-btn{
+margin-top:15px;
+padding:10px 20px;
+background:gold;
+color:#4b000f;
+border:none;
+border-radius:25px;
+text-decoration:none;
+font-weight:bold;
+display:inline-block;
+}
+
+/* TIMELINE */
+.timeline{
+padding:60px 20px;
+background:#2b0007;
+text-align:center;
+}
+
+.timeline h2{
+font-family:'Cinzel',serif;
+margin-bottom:30px;
+}
+
+.event{
+border:1px solid gold;
+padding:15px;
+margin:12px auto;
+border-radius:10px;
+max-width:500px;
+background:rgba(255,215,0,0.08);
+cursor:pointer;
+transition:0.3s;
+}
+
+.event:hover{
+background:gold;
+color:#4b000f;
+transform:scale(1.05);
+}
+
+/* MODAL */
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(5px);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:1000;
+}
+
+.modal-content{
+background:#3b000a;
+padding:30px;
+border-radius:15px;
+width:90%;
+max-width:500px;
+text-align:center;
+border:2px solid gold;
+}
+
+.close{
+margin-top:15px;
+padding:8px 20px;
+background:gold;
+border:none;
+border-radius:20px;
+color:#4b000f;
+cursor:pointer;
+font-weight:bold;
+}
+
+/* GALLERY */
+.gallery{
+padding:60px 20px;
+text-align:center;
+}
+
+.gallery h2{
+font-family:'Cinzel',serif;
+margin-bottom:20px;
+}
+
+.slider-wrapper{
+overflow:hidden;
+width:100%;
+margin-top:20px;
+}
+
+.slider-track{
+display:flex;
+gap:15px;
+width:max-content;
+animation:scroll 25s linear infinite;
+}
+
+.slider-track img{
+width:250px;
+height:300px;
+object-fit:cover;
+border-radius:12px;
+border:2px solid gold;
+transition:0.4s;
+cursor:pointer;
+}
+
+.slider-track img:hover{
+transform:scale(1.08);
+}
+.slider-wrapper:hover .slider-track{
+animation-play-state:paused;
+}
+@keyframes scroll{
+0%{ transform:translateX(0); }
+100%{ transform:translateX(-50%); }
+}
+
+.slider img{
+width:250px;
+height:300px;
+object-fit:cover;
+border-radius:12px;
+border:2px solid gold;
+cursor:pointer;
+transition:0.4s;
+}
+
+.slider img:hover{
+transform:scale(1.08);
+}
+
+
+
+/* LIGHTBOX */
+.lightbox{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:2000;
+}
+
+.lightbox img{
+max-width:90%;
+max-height:80%;
+border:3px solid gold;
+border-radius:10px;
+}
+
+.close-lightbox{
+position:absolute;
+top:20px;
+right:30px;
+font-size:30px;
+color:gold;
+cursor:pointer;
+}
+
+.prev, .next{
+position:absolute;
+top:50%;
+font-size:40px;
+color:gold;
+cursor:pointer;
+padding:10px;
+}
+
+.prev{left:20px;}
+.next{right:20px;}
+
+/* VIDEO */
+.video-section{
+padding:60px 20px;
+background:#2b0007;
+text-align:center;
+}
+
+.video-section h2{
+font-family:'Cinzel',serif;
+margin-bottom:20px;
+}
+
+video{
+width:90%;
+max-width:600px;
+border-radius:10px;
+border:2px solid gold;
+}
+
+@media(max-width:600px){
+.hero h1{font-size:24px;}
+.names{font-size:20px;}
+.slider img{width:150px;height:200px;}
+}
+</style>
+</head>
+
+<body>
+
+<section class="hero">
+
+<div class="countdown" id="countdown">Loading...</div>
+
+<h1>✨ Shubh Vivah ✨</h1>
+
+<div class="names">
+Aaradhya Sharma ❤️ Rajveer Singh Rathore
+</div>
+
+<p>14 February 2027 | Jaipur</p>
+
+<a class="map-btn" 
+href="https://www.google.com/maps?q=Jaipur" 
+target="_blank">
+View Location 📍
+</a>
+
+</section>
+
+<section class="timeline">
+<h2>👑 Wedding Functions 👑</h2>
+
+<div class="event" onclick="openModal('Roka Ceremony','Ring exchange ceremony with family blessings.')">
+💛 Roka – 10 Feb 2027 – 6 PM
+</div>
+
+<div class="event" onclick="openModal('Mehendi Ceremony','Henna art celebration with music and joy.')">
+💚 Mehendi – 11 Feb 2027 – 4 PM
+</div>
+
+<div class="event" onclick="openModal('Haldi Ceremony','Traditional haldi ritual filled with laughter.')">
+💙 Haldi – 12 Feb 2027 – 11 AM
+</div>
+
+<div class="event" onclick="openModal('Sangeet Night','Grand musical night with dance and dinner.')">
+🧡 Sangeet – 13 Feb 2027 – 7:30 PM
+</div>
+
+<div class="event" onclick="openModal('Wedding Ceremony','Sacred pheras under divine blessings.')">
+❤️ Wedding – 14 Feb 2027 – 7:30 PM
+</div>
+
+<div class="event" onclick="openModal('Reception','Grand reception dinner celebration.')">
+🎉 Reception – 15 Feb 2027 – 8 PM
+</div>
+
+</section>
+
+<section class="gallery">
+<h2>📸 Pre-Wedding Moments</h2>
+
+<div class="slider-wrapper">
+    <div class="slider-track">
+        <img src="assets/images/1.jpg" onclick="openLightbox(0)">
+        <img src="assets/images/2.jpg" onclick="openLightbox(1)">
+        <img src="assets/images/3.jpg" onclick="openLightbox(2)">
+        <img src="assets/images/5.jpg" onclick="openLightbox(3)">
+        <img src="assets/images/6.jpg" onclick="openLightbox(4)">
+        <img src="assets/images/7.jpg" onclick="openLightbox(5)">
+        <img src="assets/images/8.jpg" onclick="openLightbox(6)">
+
+        <!-- Duplicate for smooth infinite effect -->
+        <img src="assets/images/1.jpg">
+        <img src="assets/images/2.jpg">
+        <img src="assets/images/3.jpg">
+        <img src="assets/images/5.jpg">
+        <img src="assets/images/6.jpg">
+        <img src="assets/images/7.jpg">
+        <img src="assets/images/8.jpg">
+    </div>
+</div>
+
+</section>
+
+<section class="video-section">
+<h2>🎥 Pre-Wedding Film</h2>
+<video controls>
+<source src="your-video.mp4" type="video/mp4">
+</video>
+<p>(Replace "your-video.mp4" with your actual video file)</p>
+</section>
+
+<div class="modal" id="modal" onclick="outsideClick(event)">
+<div class="modal-content">
+<h3 id="modalTitle"></h3>
+<p id="modalDesc"></p>
+<button class="close" onclick="closeModal()">Close</button>
+</div>
+</div>
+
+<div class="lightbox" id="lightbox">
+<span class="close-lightbox" onclick="closeLightbox()">✖</span>
+<span class="prev" onclick="changeSlide(-1)">❮</span>
+<img id="lightbox-img">
+<span class="next" onclick="changeSlide(1)">❯</span>
+</div>
+
+<script>
+
+/* COUNTDOWN */
+var weddingDate = new Date("Feb 14, 2027 19:30:00").getTime();
+
+setInterval(function(){
+var now = new Date().getTime();
+var distance = weddingDate - now;
+
+var d = Math.floor(distance/(1000*60*60*24));
+var h = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+var m = Math.floor((distance%(1000*60*60))/(1000*60));
+var s = Math.floor((distance%(1000*60))/1000);
+
+document.getElementById("countdown").innerHTML =
+"⏳ " + d+"d "+h+"h "+m+"m "+s+"s left";
+
+},1000);
+
+/* MODAL */
+function openModal(title,desc){
+document.getElementById("modalTitle").innerText=title;
+document.getElementById("modalDesc").innerText=desc;
+document.getElementById("modal").style.display="flex";
+}
+function closeModal(){
+document.getElementById("modal").style.display="none";
+}
+function outsideClick(e){
+if(e.target.classList.contains('modal')){
+closeModal();
+}
+}
+
+/* LIGHTBOX */
+var images = [
+"/assets/images/1.jpg",
+"assets/images/2.jpg",
+"assets/images/3.jpg",
+"assets/images/5.jpg",
+"assets/images/6.jpg",
+"assets/images/7.jpg",
+"assets/images/8.jpg"
+];
+
+var currentIndex=0;
+
+function openLightbox(i){
+currentIndex=i;
+document.getElementById("lightbox").style.display="flex";
+document.getElementById("lightbox-img").src=images[currentIndex];
+}
+
+function closeLightbox(){
+document.getElementById("lightbox").style.display="none";
+}
+
+function changeSlide(dir){
+currentIndex+=dir;
+if(currentIndex<0) currentIndex=images.length-1;
+if(currentIndex>=images.length) currentIndex=0;
+document.getElementById("lightbox-img").src=images[currentIndex];
+}
+var slider = document.querySelector(".slider");
+
+setInterval(function(){
+slider.scrollLeft += 260;
+
+if(slider.scrollLeft >= slider.scrollWidth - slider.clientWidth){
+slider.scrollLeft = 0;
+}
+
+},3000);
+</script>
+
+</body>
+</html>

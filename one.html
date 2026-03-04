@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ishika ❤️ Rudra</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#1a0003,#4b0010);
+color:#ffd700;
+overflow-x:hidden;
+}
+
+/* HERO */
+.hero{
+text-align:center;
+padding:80px 20px;
+}
+
+.hero h1{
+font-family:'Cinzel',serif;
+font-size:42px;
+text-shadow:0 0 25px gold;
+}
+
+.since{
+margin-top:15px;
+display:inline-block;
+padding:8px 20px;
+border:1px solid gold;
+border-radius:30px;
+background:rgba(255,215,0,0.1);
+}
+
+/* LETTER */
+.letter{
+text-align:center;
+padding:60px 20px;
+background:#140002;
+}
+
+.typewriter{
+max-width:700px;
+margin:auto;
+line-height:1.8;
+border-right:2px solid gold;
+white-space:pre-wrap;
+overflow:hidden;
+}
+
+/* INFINITE PHOTOS */
+.gallery{
+padding:60px 0;
+overflow:hidden;
+background:#1a0003;
+}
+
+.track{
+display:flex;
+gap:20px;
+width:max-content;
+animation:scroll 35s linear infinite;
+}
+
+.track img{
+width:250px;
+height:320px;
+object-fit:cover;
+border-radius:15px;
+border:2px solid gold;
+}
+
+@keyframes scroll{
+0%{transform:translateX(0);}
+100%{transform:translateX(-50%);}
+}
+
+/* TIMELINE */
+.timeline{
+padding:80px 20px;
+text-align:center;
+background:#140002;
+}
+
+.timeline h2{
+font-family:'Cinzel',serif;
+margin-bottom:40px;
+}
+
+.date{
+display:inline-block;
+margin:10px;
+padding:12px 20px;
+border:1px solid gold;
+border-radius:30px;
+cursor:pointer;
+transition:0.3s;
+background:rgba(255,215,0,0.05);
+}
+
+.date:hover{
+background:gold;
+color:#1a0003;
+transform:scale(1.08);
+}
+
+/* FLAT POPUP */
+.popup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.popup-box{
+background:#2a0006;
+padding:40px;
+border-radius:15px;
+max-width:600px;
+width:90%;
+text-align:center;
+border:1px solid gold;
+}
+
+.close-btn{
+margin-top:20px;
+padding:8px 20px;
+background:gold;
+border:none;
+border-radius:20px;
+cursor:pointer;
+color:#1a0003;
+}
+
+</style>
+</head>
+
+<body>
+
+<section class="hero">
+<h1>Ishika ❤️ Rudra</h1>
+<div class="since">Since 9 July 2025</div>
+</section>
+
+<section class="letter">
+<div class="typewriter" id="mainLetter"></div>
+</section>
+
+<section class="gallery">
+<div class="track">
+<img src="assets/images/1.jpeg">
+<img src="assets/images/2.jpeg">
+<img src="assets/images/3.jpeg">
+<img src="assets/images/4.jpeg">
+<img src="assets/images/5.jpeg">
+<img src="assets/images/6.jpeg">
+
+<img src="assets/images/1.jpeg">
+<img src="assets/images/2.jpeg">
+<img src="assets/images/3.jpeg">
+<img src="assets/images/4.jpeg">
+<img src="assets/images/5.jpeg">
+<img src="assets/images/6.jpeg">
+</div>
+</section>
+
+<section class="timeline">
+<h2>Our Special Dates ❤️</h2>
+
+<div class="date" onclick="openPopup('9 July 2025','Yeh wo din tha jab hamari kahani shuru hui... aur meri duniya badal gayi.')">9 July 2025</div>
+
+<div class="date" onclick="openPopup('First Long Call','Us raat humne rat bhar  baat ki thi... aur time ka pata hi nahi chala.')">First Long Call</div>
+
+<div class="date" onclick="openPopup('First I Love You','Jab tumne pehli baar I Love You kaha... dil ruk sa gaya tha.')">First I Love You</div>
+
+<div class="date" onclick="openPopup('First Fight','Ladai choti thi... par usne sikhaya ki hum kitne important hain ek dusre ke liye.')">First Fight</div>
+
+<div class="date" onclick="openPopup('Today','Aaj bhi main tumhe utna hi chahta hoon... jitna pehle din.')">Today</div>
+
+</section>
+
+<div class="popup" id="popup">
+<div class="popup-box">
+<h3 id="popupTitle"></h3>
+<p id="popupText"></p>
+<button class="close-btn" onclick="closePopup()">Close</button>
+</div>
+</div>
+
+<script>
+
+/* MAIN LETTER TYPEWRITER */
+const mainText = `Ishika...
+
+Kabhi socha nahi tha
+ki ek din tum meri life ka
+sabse khoobsurat hissa ban jaogi.
+
+Aur main chahta hoon
+ye journey kabhi rukhe nahi... ❤️`;
+
+let i=0;
+function typeMain(){
+if(i<mainText.length){
+document.getElementById("mainLetter").innerHTML += mainText.charAt(i);
+i++;
+setTimeout(typeMain,40);
+}
+}
+typeMain();
+
+/* POPUP TYPEWRITER */
+function openPopup(title,text){
+document.getElementById("popup").style.display="flex";
+document.getElementById("popupTitle").innerText=title;
+let j=0;
+document.getElementById("popupText").innerHTML="";
+function typePopup(){
+if(j<text.length){
+document.getElementById("popupText").innerHTML+=text.charAt(j);
+j++;
+setTimeout(typePopup,30);
+}
+}
+typePopup();
+}
+
+function closePopup(){
+document.getElementById("popup").style.display="none";
+}
+
+</script>
+
+</body>
+</html>
