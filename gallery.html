@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Gallery ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+body{margin:0;font-family:Poppins;background:#0f172a;color:white}
+header{text-align:center;padding:12px;background:#1e293b}
+
+/* 🔥 PERFECT RESPONSIVE GRID */
+.gallery{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+ gap:10px;
+ padding:10px;
+}
+
+/* 🔥 IMAGE FIX */
+.card{
+ width:100%;
+ aspect-ratio:1/1;
+ overflow:hidden;
+ border-radius:12px;
+}
+.card img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ cursor:pointer;
+ display:block;
+}
+
+button{
+ position:fixed;
+ bottom:15px;
+ padding:10px 15px;
+ border:none;
+ border-radius:20px;
+ background:#ff4d6d;
+ color:white;
+}
+#loadBtn{left:10px}
+#videoBtn{right:10px}
+
+/* MODAL */
+.modal{
+ display:none;
+ position:fixed;
+ top:0;left:0;
+ width:100%;height:100%;
+ background:rgba(0,0,0,0.95);
+ justify-content:center;
+ align-items:center;
+ flex-direction:column;
+}
+.modal img,.modal video{
+ max-width:90%;
+ max-height:70%;
+ border-radius:10px;
+ border:4px solid;
+ animation:border 2s infinite alternate;
+}
+
+@keyframes border{
+ 0%{border-color:#ff4d6d}
+ 50%{border-color:#ff9a9e}
+ 100%{border-color:#fad0c4}
+}
+
+.close{
+ position:absolute;
+ top:10px;
+ right:15px;
+ font-size:25px;
+ cursor:pointer;
+}
+
+.gif{
+ position:absolute;
+ top:50%;
+ transform:translateY(-50%);
+ width:60px;
+}
+.left{left:5px}
+.right{right:5px}
+
+.save-btn{
+ margin-top:10px;
+ padding:8px 16px;
+ border:none;
+ border-radius:20px;
+ background:#ff4d6d;
+ color:white;
+}
+</style>
+</head>
+<body>
+
+<header>💖 Our Memories 💖</header>
+<div class="gallery" id="gallery"></div>
+
+<button id="loadBtn">Load</button>
+<button id="videoBtn">🎥 Videos</button>
+
+<div class="modal" id="modal">
+<span class="close" id="closeBtn">&times;</span>
+<img src="/left.gif" class="gif left">
+<img src="/right.gif" class="gif right">
+<div id="modalContent"></div>
+<button class="save-btn" onclick="downloadCurrent()">Save 💾</button>
+</div>
+
+<script>
+const gallery=document.getElementById('gallery');
+const modal=document.getElementById('modal');
+const modalContent=document.getElementById('modalContent');
+const closeBtn=document.getElementById('closeBtn');
+
+const images=Array.from({length:86},(_,i)=>`All/${i+1}.jpg`);
+const videos=Array.from({length:11},(_,i)=>`All/Video/${i+1}.mp4`);
+
+let index=0,currentSrc="";
+const batch=10;
+
+function createCard(src){
+ const div=document.createElement('div');
+ div.className='card';
+ const img=document.createElement('img');
+ img.src=src;
+ img.onclick=()=>openModal(src,'image');
+ div.appendChild(img);
+ return div;
+}
+
+function loadMore(){
+ const items=images.slice(index,index+batch);
+ items.forEach(src=>gallery.appendChild(createCard(src)));
+ index+=batch;
+}
+
+document.getElementById('loadBtn').onclick=loadMore;
+
+function openModal(src,type){
+ currentSrc=src;
+ modal.style.display='flex';
+ modalContent.innerHTML='';
+
+ if(type==='image'){
+  const img=document.createElement('img');
+  img.src=src;
+  modalContent.appendChild(img);
+ }else{
+  const vid=document.createElement('video');
+  vid.src=src;
+  vid.controls=true;
+  vid.autoplay=true;
+  modalContent.appendChild(vid);
+ }
+}
+
+function openVideos(){
+ modal.style.display='flex';
+ modalContent.innerHTML='';
+
+ const wrap=document.createElement('div');
+ wrap.style.display='grid';
+ wrap.style.gridTemplateColumns='repeat(2,1fr)';
+ wrap.style.gap='10px';
+
+ videos.forEach(v=>{
+  const vid=document.createElement('video');
+  vid.src=v;
+  vid.controls=true;
+  vid.style.width='100%';
+  vid.onclick=(e)=>{e.stopPropagation();openModal(v,'video')};
+  wrap.appendChild(vid);
+ });
+
+ modalContent.appendChild(wrap);
+}
+
+document.getElementById('videoBtn').onclick=openVideos;
+
+closeBtn.onclick=()=>{
+ modal.style.display='none';
+ const vids=modalContent.querySelectorAll('video');
+ vids.forEach(v=>{v.pause();v.currentTime=0});
+ modalContent.innerHTML='';
+}
+
+function downloadCurrent(){
+ const a=document.createElement('a');
+ a.href=currentSrc;
+ a.download=currentSrc.split('/').pop();
+ a.click();
+}
+
+loadMore();
+</script>
+
+</body>
+</html>
