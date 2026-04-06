@@ -111,7 +111,7 @@ button{
 
 <button id="loadBtn">Load</button>
 <button id="videoBtn">🎥 Videos</button>
-
+<button id="slideBtn" style="left:50%;transform:translateX(-50%);">▶ Slideshow</button>
 <div class="modal" id="modal">
 <span class="close" id="closeBtn">&times;</span>
 <img src="/left.gif" class="gif left">
@@ -204,6 +204,41 @@ function downloadCurrent(){
  a.download=currentSrc.split('/').pop();
  a.click();
 }
+let slideIndex = 0;
+let slideInterval = null;
+
+document.getElementById('slideBtn').onclick = () => {
+  if (slideInterval) {
+    // Stop slideshow
+    clearInterval(slideInterval);
+    slideInterval = null;
+    document.getElementById('slideBtn').innerText = "▶ Slideshow";
+    closeBtn.click();
+    return;
+  }
+
+  // Start slideshow
+  slideIndex = 0;
+  document.getElementById('slideBtn').innerText = "⏸ Stop";
+
+  modal.style.display = 'flex';
+
+  function showSlide() {
+    if (slideIndex >= images.length) slideIndex = 0;
+
+    modalContent.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = images[slideIndex];
+    modalContent.appendChild(img);
+
+    currentSrc = images[slideIndex];
+    slideIndex++;
+  }
+
+  showSlide();
+
+  slideInterval = setInterval(showSlide, 2000); // 🔥 speed control (2 sec)
+};
 
 loadMore();
 </script>

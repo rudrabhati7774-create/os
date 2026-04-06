@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Love Story ❤️</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background: linear-gradient(135deg,#ff758c,#ff7eb3);
+    min-height:100vh;
+    overflow-x:hidden;
+    color:white;
+}
+
+/* Header */
+header{
+    text-align:center;
+    padding:25px;
+}
+
+/* Grid */
+.container{
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+    padding:20px;
+}
+
+/* Flip Card */
+.card{
+    perspective:1000px;
+    opacity:0;
+    transform:translateY(40px);
+    animation:fadeUp 0.8s forwards;
+}
+
+.inner{
+    position:relative;
+    width:100%;
+    height:300px;
+    transform-style:preserve-3d;
+    transition:transform 0.8s;
+}
+
+.card.flip .inner{
+    transform:rotateY(180deg);
+}
+
+.front, .back{
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-radius:20px;
+    overflow:hidden;
+    backface-visibility:hidden;
+}
+
+/* Front */
+.front{
+    background:white;
+    padding:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+.front img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:15px;
+}
+
+/* Back */
+.back{
+    background:rgba(255,255,255,0.2);
+    backdrop-filter:blur(15px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:20px;
+    transform:rotateY(180deg);
+    font-size:16px;
+}
+
+/* Animation */
+@keyframes fadeUp{
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* Floating Hearts */
+.heart{
+    position:fixed;
+    bottom:-10px;
+    animation:float 6s linear infinite;
+}
+
+@keyframes float{
+    to{
+        transform:translateY(-100vh);
+        opacity:0;
+    }
+}
+
+/* Letter Box */
+#letterBox{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:rgba(255,255,255,0.2);
+    backdrop-filter:blur(20px);
+    padding:30px;
+    border-radius:20px;
+    width:85%;
+    max-width:420px;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,0.5);
+    display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>❤️ Our Love Story ❤️</h1>
+    <p>Flip every memory 💕</p>
+</header>
+
+<audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container" id="gallery"></div>
+
+<div id="letterBox">
+    <h2>💌 For My Love 💌</h2>
+    <p id="typingText"></p>
+</div>
+
+<script>
+const images = 10; // number of photos
+
+const messages = [
+"Jab tum meri life me aayi...",
+"Tab mujhe samajh aaya ki pyaar kya hota hai 💖",
+"Tumhari smile meri sabse badi khushi hai 😊",
+"Aur tumhari awaaz mera sukoon hai 🎶",
+"Har din tumhare saath ek nayi yaad ban jaati hai 🌸",
+"Main shayad perfect nahi hoon...",
+"Par tumse pyaar hamesha perfect rahega ❤️",
+"Main hamesha tumhara saath dunga 🤝",
+"Har khushi, har dukh me...",
+"Because you are my everything 💕"
+];
+
+let flipped = 0;
+let musicStarted = false;
+
+// Generate Cards
+const gallery = document.getElementById("gallery");
+
+for(let i=0;i<images;i++){
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.animationDelay = (i*0.2)+"s";
+
+    card.innerHTML = `
+    <div class="inner">
+        <div class="front">
+            <img src="images/${i+1}.jpeg">
+        </div>
+        <div class="back">
+            ${messages[i]}
+        </div>
+    </div>
+    `;
+
+    card.onclick = () => flip(card);
+    gallery.appendChild(card);
+}
+
+// Flip Function
+function flip(card){
+    if(!card.classList.contains("flip")){
+        card.classList.add("flip");
+        flipped++;
+    }
+
+    if(!musicStarted){
+        document.getElementById("bgMusic").play();
+        musicStarted = true;
+    }
+
+    if(flipped === images){
+        showLetter();
+    }
+}
+
+// Show Letter
+function showLetter(){
+    document.getElementById("letterBox").style.display="block";
+    typeWriter();
+}
+
+// Typewriter
+const fullText = messages.join("\n");
+let i = 0;
+
+function typeWriter(){
+    if(i < fullText.length){
+        document.getElementById("typingText").innerHTML += fullText.charAt(i);
+        i++;
+        setTimeout(typeWriter, 35);
+    }
+}
+
+// Floating Hearts
+setInterval(()=>{
+    const heart = document.createElement("div");
+    heart.className="heart";
+    heart.innerHTML="❤️";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.fontSize=(10+Math.random()*20)+"px";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),6000);
+},400);
+
+</script>
+
+</body>
+</html>
