@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Love ❤️</title>
+
+<style>
+body{
+  margin:0;
+  overflow:hidden;
+  font-family:'Segoe UI',sans-serif;
+  color:white;
+}
+
+/* VIDEO BG */
+video{
+  position:fixed;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:-1;
+}
+
+/* OVERLAY */
+.overlay{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.4);
+}
+
+/* TEXT */
+.title{
+  position:absolute;
+  top:45%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  max-width:90%;
+  font-size:24px;
+  z-index:2;
+}
+
+@media (max-width:600px){
+  .title{font-size:16px;}
+}
+
+/* CURSOR */
+.cursor{
+  display:inline-block;
+  width:3px;
+  height:20px;
+  background:white;
+  margin-left:5px;
+  animation:blink 1s infinite;
+}
+@keyframes blink{
+  0%,50%,100%{opacity:1;}
+  25%,75%{opacity:0;}
+}
+
+/* FIREWORKS */
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  pointer-events:none;
+}
+
+/* BUTTON */
+#nextBtn{
+  position:absolute;
+  bottom:40px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:12px 25px;
+  font-size:16px;
+  border:none;
+  border-radius:30px;
+  background:#ff4d6d;
+  color:white;
+  display:none;
+  z-index:3;
+  cursor:pointer;
+  box-shadow:0 0 15px #ff4d6d;
+}
+
+/* SECOND PAGE */
+#secondPage{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  opacity:0;
+  pointer-events:none;
+  transition:1s;
+}
+
+#secondPage h1{
+  font-size:35px;
+  color:#ff4d6d;
+  text-align:center;
+}
+
+.show{
+  opacity:1 !important;
+  pointer-events:auto !important;
+}
+</style>
+</head>
+
+<body>
+
+<!-- VIDEO -->
+<video autoplay muted loop>
+  <source src="bg.mp4" type="video/mp4">
+</video>
+
+<div class="overlay"></div>
+
+<!-- MUSIC -->
+<audio id="music" src="1.mp3" loop></audio>
+
+<!-- TEXT -->
+<h1 class="title">
+  <span id="text"></span><span class="cursor"></span>
+</h1>
+
+<!-- FIREWORKS -->
+<canvas id="fireworks"></canvas>
+
+<!-- BUTTON -->
+<button id="nextBtn">Tap for Surprise ❤️</button>
+
+<!-- SECOND PAGE -->
+<div id="secondPage">
+  <h1>I LOVE YOU ❤️<br>Happy Birthday My Queen 👑</h1>
+</div>
+
+<script>
+// PLAY MUSIC (after user interaction best)
+window.addEventListener("click", () => {
+  document.getElementById("music").play().catch(()=>{});
+}, { once: true });
+
+// TYPEWRITER
+const lines = [
+"Happy Birthday Mere Jaan ❤️",
+"Tum meri chotu sa life ka sabse kimti part ho",
+"Main tumse bahut pyaar karta hoon 💖",
+"Aaj ka din sirf tumhare liye hai 🎂",
+"I love you so much bubuu,biwuu,jaan,patni,biwii mere sabh kuch..."
+];
+
+let i=0,j=0;
+const text = document.getElementById("text");
+
+function typeWriter(){
+  if(i < lines.length){
+    if(j < lines[i].length){
+      text.innerHTML += lines[i].charAt(j);
+      j++;
+      setTimeout(typeWriter,80);
+    } else {
+      text.innerHTML += "<br><br>";
+      i++;
+      j=0;
+      setTimeout(typeWriter,1000);
+    }
+  } else {
+    startFireworks();
+  }
+}
+
+setTimeout(typeWriter,2000);
+
+// FIREWORKS
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function createFirework(){
+  let x = Math.random()*canvas.width;
+  let y = Math.random()*canvas.height/2;
+
+  for(let i=0;i<60;i++){
+    particles.push({
+      x,y,
+      angle:Math.random()*2*Math.PI,
+      speed:Math.random()*5+2,
+      life:100
+    });
+  }
+}
+
+function animate(){
+  ctx.fillStyle="rgba(0,0,0,0.2)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  particles.forEach((p,i)=>{
+    p.x += Math.cos(p.angle)*p.speed;
+    p.y += Math.sin(p.angle)*p.speed;
+    p.life--;
+
+    ctx.fillStyle="hsl("+Math.random()*360+",100%,50%)";
+    ctx.fillRect(p.x,p.y,3,3);
+
+    if(p.life<=0) particles.splice(i,1);
+  });
+
+  requestAnimationFrame(animate);
+}
+
+function startFireworks(){
+  setInterval(createFirework,500);
+  animate();
+
+  // SHOW BUTTON AFTER 4 SEC
+  setTimeout(()=>{
+    document.getElementById("nextBtn").style.display="block";
+  },4000);
+}
+
+// BUTTON CLICK → NEXT PAGE
+document.getElementById("nextBtn").onclick = ()=>{
+  window.location.href = "love.html";
+
+};
+</script>
+
+</body>
+</html>
