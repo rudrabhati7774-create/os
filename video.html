@@ -1,0 +1,574 @@
+# Romantic Video Surprise Experience ❤️
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>For My Love ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:#000;
+    overflow:hidden;
+    color:white;
+}
+
+.screen{
+    position:absolute;
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    transition:1s;
+}
+
+.hidden{
+    opacity:0;
+    pointer-events:none;
+}
+
+/* START SCREEN */
+#startScreen{
+    background:linear-gradient(135deg,#090909,#1b0d1f,#000);
+}
+
+#startScreen::before{
+    content:'';
+    position:absolute;
+    width:500px;
+    height:500px;
+    background:rgba(255,0,120,0.15);
+    filter:blur(120px);
+    border-radius:50%;
+    animation:float 6s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%{transform:translateY(0px)}
+    50%{transform:translateY(-20px)}
+    100%{transform:translateY(0px)}
+}
+
+.main-title{
+    font-size:4rem;
+    font-family:'Great Vibes',cursive;
+    margin-bottom:20px;
+    z-index:2;
+}
+
+.subtitle{
+    opacity:.8;
+    margin-bottom:40px;
+    z-index:2;
+}
+
+.start-btn{
+    padding:16px 45px;
+    border:none;
+    border-radius:50px;
+    font-size:1.1rem;
+    cursor:pointer;
+    background:linear-gradient(45deg,#ff4d88,#ff0066);
+    color:white;
+    box-shadow:0 0 25px rgba(255,0,102,0.6);
+    transition:.4s;
+    z-index:2;
+}
+
+.start-btn:hover{
+    transform:scale(1.08);
+    box-shadow:0 0 45px rgba(255,0,102,0.9);
+}
+
+/* LOADING SCREEN */
+#loadingScreen{
+    background:black;
+    overflow:hidden;
+}
+
+.loading-texts{
+    position:absolute;
+    width:100%;
+    height:100%;
+}
+
+.loading-texts span{
+    position:absolute;
+    color:rgba(255,255,255,0.12);
+    font-size:1rem;
+    animation:floatText linear infinite;
+    white-space:nowrap;
+}
+
+@keyframes floatText{
+    from{
+        transform:translateY(100vh);
+        opacity:0;
+    }
+    20%{
+        opacity:1;
+    }
+    to{
+        transform:translateY(-120vh);
+        opacity:0;
+    }
+}
+
+.center-heart{
+    font-size:6rem;
+    animation:pulse 1s infinite;
+    z-index:10;
+}
+
+.loading-msg{
+    margin-top:20px;
+    font-size:1.2rem;
+    opacity:.8;
+    z-index:10;
+}
+
+@keyframes pulse{
+    0%{transform:scale(1)}
+    50%{transform:scale(1.15)}
+    100%{transform:scale(1)}
+}
+
+/* VIDEO SCREEN */
+#videoScreen{
+    background:black;
+}
+
+video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* END SCREEN */
+#endScreen{
+    background:url('ending.jpg') center/cover no-repeat;
+    text-align:center;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+    backdrop-filter:blur(4px);
+}
+
+.end-content{
+    z-index:2;
+    padding:20px;
+}
+
+.end-title{
+    font-size:4rem;
+    font-family:'Great Vibes',cursive;
+    margin-bottom:20px;
+    animation:fadeUp 2s ease;
+}
+
+.end-text{
+    max-width:700px;
+    line-height:1.8;
+    font-size:1.1rem;
+    opacity:.9;
+    animation:fadeUp 3s ease;
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.video-frame{
+    width:90%;
+    max-width:900px;
+    padding:5px;
+    border-radius:30px;
+    background:linear-gradient(45deg,red,orange,yellow,green,cyan,blue,purple,red);
+    background-size:400% 400%;
+    animation:rgbBorder 8s linear infinite;
+    box-shadow:0 0 50px rgba(255,0,120,0.4);
+}
+
+.video-frame video{
+    width:100%;
+    border-radius:25px;
+    display:block;
+    max-height:80vh;
+    object-fit:cover;
+    background:black;
+}
+
+@keyframes rgbBorder{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.controls{
+    display:flex;
+    gap:15px;
+}
+
+.control-btn{
+    padding:14px 30px;
+    border:none;
+    border-radius:50px;
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(10px);
+    color:white;
+    font-size:1rem;
+    cursor:pointer;
+    transition:.3s;
+    border:1px solid rgba(255,255,255,0.15);
+}
+
+.control-btn:hover{
+    transform:scale(1.05);
+    background:rgba(255,255,255,0.18);
+}
+
+.music-note{
+    position:absolute;
+    font-size:2rem;
+    opacity:0.2;
+    animation:notes 8s linear infinite;
+}
+
+@keyframes notes{
+    from{
+        transform:translateY(100vh) rotate(0deg);
+    }
+    to{
+        transform:translateY(-120vh) rotate(360deg);
+    }
+}
+
+@media(max-width:768px){
+
+    body{
+        overflow:hidden;
+    }
+
+    .screen{
+        padding:20px;
+    }
+
+    .main-title,
+    .end-title{
+        font-size:2.4rem;
+        text-align:center;
+        line-height:1.2;
+    }
+
+    .subtitle,
+    .end-text,
+    .loading-msg{
+        font-size:0.95rem;
+        padding:0 10px;
+        text-align:center;
+        line-height:1.7;
+    }
+
+    .center-heart{
+        font-size:4rem;
+    }
+
+    .start-btn{
+        width:90%;
+        max-width:320px;
+        font-size:1rem;
+        padding:15px 20px;
+    }
+
+    .video-frame{
+        width:100%;
+        border-radius:22px;
+        padding:4px;
+    }
+
+    .video-frame video{
+        border-radius:18px;
+        width:100%;
+        height:auto;
+        max-height:65vh;
+        object-fit:cover;
+    }
+
+    .controls{
+        width:100%;
+        justify-content:center;
+        flex-wrap:wrap;
+    }
+
+    .control-btn{
+        width:85%;
+        max-width:300px;
+        font-size:0.95rem;
+        padding:13px 20px;
+    }
+
+    #videoContainer{
+        width:100%;
+        padding:10px;
+    }
+
+    .music-note{
+        font-size:1.5rem;
+    }
+
+    .loading-texts span{
+        font-size:0.8rem !important;
+    }
+}
+
+@media(max-width:480px){
+
+    .main-title,
+    .end-title{
+        font-size:2rem;
+    }
+
+    .subtitle,
+    .end-text,
+    .loading-msg{
+        font-size:0.88rem;
+    }
+
+    .center-heart{
+        font-size:3.5rem;
+    }
+
+    .video-frame video{
+        max-height:58vh;
+    }
+
+    .control-btn,
+    .start-btn{
+        font-size:0.9rem;
+    }
+}
+
+    .subtitle,
+    .end-text{
+        font-size:0.95rem;
+        padding:0 20px;
+    }
+
+    .center-heart{
+        font-size:4rem;
+    }
+
+</style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="startScreen" class="screen">
+    <h1 class="main-title">Sirf Tumhare Liye ❤️</h1>
+    <p class="subtitle">Ek chota sa surprise meri jaan ke liye...</p>
+    <button class="start-btn" onclick="startExperience()">Touch Here ❤️</button>
+</div>
+
+<!-- LOADING SCREEN -->
+<div id="loadingScreen" class="screen hidden">
+    <div class="loading-texts" id="textsContainer"></div>
+    <div class="center-heart">❤️</div>
+    <div class="loading-msg">Humari pyari yaadein collect ho rahi hain... ❤️</div>
+</div>
+
+<!-- VIDEO SCREEN -->
+<div id="videoScreen" class="screen hidden">
+
+    <div id="videoContainer" style="display:none;flex-direction:column;align-items:center;gap:25px;">
+
+        <div class="video-frame">
+            <video id="loveVideo">
+                <source src="video.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" onclick="toggleVideo()">⏯ Play / Pause</button>
+        </div>
+
+    </div>
+
+    <button id="startVideoBtn" class="start-btn" style="display:none;" onclick="playVideoNow()">
+        Start The Memory ❤️
+    </button>
+
+</div>
+
+<!-- END SCREEN -->
+<div id="endScreen" class="screen hidden">
+    <div class="overlay"></div>
+
+    <div class="music-note" style="left:10%;animation-duration:7s;">♫</div>
+    <div class="music-note" style="left:30%;animation-duration:10s;">♪</div>
+    <div class="music-note" style="left:70%;animation-duration:8s;">♫</div>
+    <div class="music-note" style="left:90%;animation-duration:11s;">♪</div>
+
+    <div class="end-content">
+        <h1 class="end-title">The End ❤️</h1>
+
+        <p class="end-text" id="cinemaText"></p>
+    </div>
+</div>
+
+<script>
+const loadingTexts = [
+    'Humari yaadein load ho rahi hain...',
+    'Tumhari smile dhund raha hu...',
+    'Hamare cute moments collect ho rahe hain...',
+    'Dil ke special memories save ho rahe hain...',
+    'Tumhari hasi replay ho rahi hai...',
+    'Forever wala love prepare ho raha hai...',
+    'Ek special surprise ready ho raha hai...',
+    'Tum meri favorite person ho ❤️',
+    'Love story unlock ho rahi hai...',
+    'Late night talks restore ho rahi hain...',
+    'Dil tumhare naam ho chuka hai...',
+    'Bas tum aur main ❤️',
+    'Infinite love loading...',
+    'Tumhare bina sab adhura hai...',
+    'Our forever moment is coming...'
+];
+
+const container = document.getElementById('textsContainer');
+
+for(let i=0;i<120;i++){
+    const span = document.createElement('span');
+
+    span.innerText = loadingTexts[Math.floor(Math.random()*loadingTexts.length)];
+
+    span.style.left = Math.random()*100 + 'vw';
+    span.style.animationDuration = (5 + Math.random()*8) + 's';
+    span.style.fontSize = (0.8 + Math.random()*1.2) + 'rem';
+    span.style.animationDelay = Math.random()*5 + 's';
+
+    container.appendChild(span);
+}
+
+function startExperience(){
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('loadingScreen').classList.remove('hidden');
+
+    setTimeout(()=>{
+        document.getElementById('loadingScreen').classList.add('hidden');
+        document.getElementById('videoScreen').classList.remove('hidden');
+
+        document.getElementById('startVideoBtn').style.display='block';
+    },7000);
+}
+
+function playVideoNow(){
+    document.getElementById('startVideoBtn').style.display='none';
+    document.getElementById('videoContainer').style.display='flex';
+
+    const video = document.getElementById('loveVideo');
+    video.play();
+
+    video.onended = ()=>{
+        document.getElementById('videoScreen').classList.add('hidden');
+        document.getElementById('endScreen').classList.remove('hidden');
+
+        startCinemaText();
+    }
+}
+
+function toggleVideo(){
+    const video = document.getElementById('loveVideo');
+
+    if(video.paused){
+        video.play();
+    }else{
+        video.pause();
+    }
+}
+const finalLines = [
+    'Kuch log zindagi me bas aate nahi...',
+    'woh zindagi ban jaate hain...',
+    '',
+    'Aur meri zindagi...',
+    'tum ho ❤️',
+    '',
+    'Every memory with you...',
+    'feels like my favorite scene.',
+    '',
+    'Agar dobara life mili...',
+    'toh phir se tumhe hi choose karunga...',
+    '',
+    'Again...',
+    'and again...',
+    'and forever ❤️'
+];
+
+function startCinemaText(){
+    const textElement = document.getElementById('cinemaText');
+    let lineIndex = 0;
+
+    function showNextLine(){
+        if(lineIndex < finalLines.length){
+            const line = document.createElement('div');
+            line.style.opacity = '0';
+            line.style.marginBottom = '15px';
+            line.style.animation = 'fadeUp 2s ease forwards';
+            line.innerText = finalLines[lineIndex];
+
+            textElement.appendChild(line);
+            lineIndex++;
+
+            setTimeout(showNextLine,1500);
+        }
+    }
+
+    showNextLine();
+}
+</script>
+
+</body>
+</html>
+```
+
+# Folder Setup
+
+Put these files together:
+
+* index.html
+* video.mp4 ← your special video
+* ending.jpg ← ending romantic image
+
+# Customization
+
+You can change:
+
+* ending text
+* background image
+* loading messages
+* music
+* colors
+* animations
+
+This will feel like a cinematic romantic experience instead of just sending a normal video ❤️
