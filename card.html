@@ -320,7 +320,9 @@ function startRound() {
     });
 }
 const surpriseText = `
-=
+Yahan apna pura paragraph likho.
+
+Jitna lamba likhna hai likho.
 
 Dear Love ❤️,
 
@@ -329,7 +331,6 @@ Har moment jo humne saath spend kiya hai wo mere liye special hai.
 
 Thank you for being with me.
 I love you forever 💖
-Mere JAAN ISKE AGEE KA ABHI COMING SOON BHUT JLD BNAUNGA ISKEEE AGEEE KAAAA
 `;
 function handleCard(card) {
 
@@ -507,117 +508,7 @@ function gameOver() {
         location.reload();
     }
 }
-if(level > 10){
-    showSurprise();
-    return;
-}
-function showSurprise(){
 
-document.body.innerHTML = `
-
-<div style="
-min-height:100vh;
-background:black;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:30px;
-">
-
-<div style="
-max-width:700px;
-text-align:center;
-">
-
-<h1 style="
-color:#ff69b4;
-margin-bottom:25px;
-font-size:40px;
-">
-❤️ A Message For You ❤️
-</h1>
-
-<p style="
-font-size:20px;
-line-height:1.8;
-white-space:pre-line;
-color:#f5f5f5;
-">
-${surpriseText}
-</p>
-
-</div>
-
-</div>
-
-`;
-
-}
-function showSurprise(){
-
-document.body.innerHTML = `
-
-<div id="surprisePage"
-style="
-height:100vh;
-background:black;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:25px;
-">
-
-<div style="
-max-width:700px;
-text-align:center;
-">
-
-<h1 style="
-color:#ff69b4;
-margin-bottom:25px;
-">
-❤️ A Message For You ❤️
-</h1>
-
-<p id="letter"
-style="
-font-size:20px;
-line-height:1.8;
-white-space:pre-line;
-">
-</p>
-
-</div>
-
-</div>
-
-`;
-
-typeLetter();
-}
-
-function typeLetter(){
-
-const text = surpriseText;
-
-const box = document.getElementById("letter");
-
-let i = 0;
-
-const timer = setInterval(()=>{
-
-    box.textContent += text.charAt(i);
-
-    i++;
-
-    if(i >= text.length){
-        clearInterval(timer);
-    }
-
-},30);
-
-}
 function restartGame() {
 
     score = 0;
