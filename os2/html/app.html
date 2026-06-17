@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Love OS Apps ❤️</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+
+background:
+linear-gradient(
+180deg,
+#050505,
+#111
+);
+
+min-height:100vh;
+
+color:white;
+
+overflow:hidden;
+}
+
+/* Stars */
+
+.star{
+position:absolute;
+background:white;
+border-radius:50%;
+animation:twinkle 3s infinite alternate;
+}
+
+@keyframes twinkle{
+from{opacity:.2;}
+to{opacity:1;}
+}
+
+/* Header */
+
+.header{
+
+padding:25px;
+
+text-align:center;
+}
+
+.header h1{
+
+font-size:32px;
+}
+
+/* Search */
+
+.searchWrap{
+
+padding:0 20px;
+}
+
+.search{
+
+width:100%;
+
+padding:15px;
+
+border:none;
+
+outline:none;
+
+border-radius:20px;
+
+background:
+rgba(255,255,255,.08);
+
+backdrop-filter:blur(20px);
+
+color:white;
+}
+
+/* Apps */
+
+.apps{
+
+padding:25px;
+
+display:grid;
+
+grid-template-columns:
+repeat(4,1fr);
+
+gap:25px;
+}
+
+.app{
+
+text-align:center;
+
+cursor:pointer;
+
+transition:.3s;
+}
+
+.app:hover{
+
+transform:scale(1.08);
+}
+
+.icon{
+
+width:75px;
+height:75px;
+
+margin:auto;
+
+border-radius:24px;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+font-size:32px;
+
+background:
+rgba(255,255,255,.08);
+
+backdrop-filter:blur(25px);
+
+border:
+1px solid rgba(255,255,255,.15);
+}
+
+.name{
+
+margin-top:8px;
+
+font-size:14px;
+}
+
+/* Back Button */
+
+.back{
+
+position:fixed;
+
+bottom:20px;
+left:50%;
+
+transform:translateX(-50%);
+
+padding:15px 30px;
+
+border:none;
+
+border-radius:25px;
+
+background:
+rgba(255,255,255,.1);
+
+backdrop-filter:blur(25px);
+
+color:white;
+
+cursor:pointer;
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.apps{
+
+grid-template-columns:
+repeat(3,1fr);
+
+gap:18px;
+}
+
+.icon{
+
+width:65px;
+height:65px;
+
+font-size:28px;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<div class="header">
+<h1>❤️ Love OS Apps</h1>
+</div>
+
+<div class="searchWrap">
+<input
+class="search"
+placeholder="Search Love Apps...">
+</div>
+
+<div class="apps">
+
+<div class="app">
+<div class="icon">📸</div>
+<div class="name">Memories</div>
+</div>
+
+<div class="app">
+<div class="icon">💌</div>
+<div class="name">Letters</div>
+</div>
+
+<div class="app">
+<div class="icon">🎵</div>
+<div class="name">Music</div>
+</div>
+
+<div class="app">
+<div class="icon">🌙</div>
+<div class="name">Moon</div>
+</div>
+
+<div class="app">
+<div class="icon">❤️</div>
+<div class="name">Love</div>
+</div>
+
+<div class="app">
+<div class="icon">🌹</div>
+<div class="name">Rose</div>
+</div>
+
+<div class="app">
+<div class="icon">🎁</div>
+<div class="name">Surprise</div>
+</div>
+
+<div class="app">
+<div class="icon">💕</div>
+<div class="name">Gallery</div>
+</div>
+
+<div class="app">
+<div class="icon">✨</div>
+<div class="name">Magic</div>
+</div>
+
+<div class="app">
+<div class="icon">⭐</div>
+<div class="name">Stars</div>
+</div>
+
+<div class="app">
+<div class="icon">💖</div>
+<div class="name">Heart</div>
+</div>
+
+<div class="app">
+<div class="icon">🫶</div>
+<div class="name">Forever</div>
+</div>
+
+</div>
+
+<button class="back" onclick="location.href='home.html'">
+🏠 Back Home
+</button>
+
+<script>
+
+/* Stars */
+
+for(let i=0;i<120;i++){
+
+let star=document.createElement("div");
+
+star.className="star";
+
+let size=Math.random()*3;
+
+star.style.width=size+"px";
+star.style.height=size+"px";
+
+star.style.left=Math.random()*100+"vw";
+star.style.top=Math.random()*100+"vh";
+
+document.body.appendChild(star);
+
+}
+
+</script>
+
+</body>
+</html>

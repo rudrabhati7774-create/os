@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Memories ❤️</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#000;
+color:white;
+min-height:100vh;
+overflow-x:hidden;
+}
+
+/* Header */
+
+.header{
+
+position:sticky;
+top:0;
+
+padding:20px;
+
+background:rgba(0,0,0,.7);
+
+backdrop-filter:blur(20px);
+
+z-index:100;
+}
+
+.header h1{
+text-align:center;
+margin-bottom:15px;
+}
+
+.search{
+
+width:100%;
+
+padding:15px;
+
+border:none;
+
+outline:none;
+
+border-radius:20px;
+
+background:rgba(255,255,255,.08);
+
+color:white;
+}
+
+/* Gallery */
+
+.gallery{
+
+padding:20px;
+
+columns:4 250px;
+
+column-gap:15px;
+}
+
+.card{
+
+break-inside:avoid;
+
+margin-bottom:15px;
+
+border-radius:20px;
+
+overflow:hidden;
+
+background:rgba(255,255,255,.08);
+
+backdrop-filter:blur(20px);
+
+cursor:pointer;
+}
+
+.card img{
+
+width:100%;
+
+display:block;
+
+transition:.4s;
+}
+
+.card img:hover{
+
+transform:scale(1.04);
+}
+
+/* Viewer */
+
+.viewer{
+
+position:fixed;
+inset:0;
+
+background:rgba(0,0,0,.95);
+
+display:none;
+
+justify-content:center;
+align-items:center;
+
+z-index:9999;
+}
+
+.viewer.show{
+display:flex;
+}
+
+.viewer img{
+
+max-width:90%;
+max-height:80vh;
+
+border-radius:20px;
+}
+
+.close{
+
+position:absolute;
+top:20px;
+right:20px;
+
+font-size:30px;
+
+cursor:pointer;
+}
+
+.prev,
+.next{
+
+position:absolute;
+top:50%;
+
+transform:translateY(-50%);
+
+font-size:40px;
+
+cursor:pointer;
+
+padding:15px;
+}
+
+.prev{
+left:20px;
+}
+
+.next{
+right:20px;
+}
+
+.back{
+
+position:fixed;
+
+bottom:20px;
+left:50%;
+
+transform:translateX(-50%);
+
+padding:15px 30px;
+
+border:none;
+
+border-radius:25px;
+
+background:rgba(255,255,255,.1);
+
+backdrop-filter:blur(20px);
+
+color:white;
+
+cursor:pointer;
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.gallery{
+columns:2 150px;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+
+<h1>📸 Our Memories ❤️</h1>
+
+<input
+class="search"
+id="search"
+placeholder="Search Photos...">
+
+</div>
+
+<div id="gallery" class="gallery"></div>
+
+<!-- Viewer -->
+
+<div id="viewer" class="viewer">
+
+<div class="close">✕</div>
+
+<div class="prev">⬅</div>
+
+<img id="viewerImg">
+
+<div class="next">➡</div>
+
+</div>
+
+<button
+class="back"
+onclick="location.href='app.html'">
+
+🏠 Back
+
+</button>
+
+<script>
+
+const TOTAL_IMAGES = 200;
+
+const gallery =
+document.getElementById("gallery");
+
+const viewer =
+document.getElementById("viewer");
+
+const viewerImg =
+document.getElementById("viewerImg");
+
+let current = 0;
+
+for(let i=1;i<=TOTAL_IMAGES;i++){
+
+const card =
+document.createElement("div");
+
+card.className="card";
+
+card.innerHTML=`
+<img
+src="/assets/moon/${i}.jpeg"
+loading="lazy"
+data-index="${i-1}">
+`;
+
+gallery.appendChild(card);
+
+}
+
+function attachEvents(){
+
+const imgs =
+document.querySelectorAll(".card img");
+
+imgs.forEach((img,index)=>{
+
+img.onclick=()=>{
+
+current=index;
+
+viewer.classList.add("show");
+
+viewerImg.src=
+img.src;
+
+};
+
+});
+
+}
+
+attachEvents();
+
+/* Close */
+
+document
+.querySelector(".close")
+.onclick=()=>{
+
+viewer.classList.remove("show");
+
+};
+
+/* Next */
+
+document
+.querySelector(".next")
+.onclick=()=>{
+
+current++;
+
+if(current>=TOTAL_IMAGES)
+current=0;
+
+viewerImg.src=
+`images/${current+1}.jpg`;
+
+};
+
+/* Prev */
+
+document
+.querySelector(".prev")
+.onclick=()=>{
+
+current--;
+
+if(current<0)
+current=TOTAL_IMAGES-1;
+
+viewerImg.src=
+`images/${current+1}.jpg`;
+
+};
+
+/* Search */
+
+document
+.getElementById("search")
+.addEventListener("input",e=>{
+
+const value =
+e.target.value.toLowerCase();
+
+document
+.querySelectorAll(".card")
+.forEach((card,index)=>{
+
+const name =
+`photo ${index+1}`;
+
+card.style.display =
+name.includes(value)
+? "block"
+: "none";
+
+});
+
+});
+
+</script>
+
+</body>
+</html>

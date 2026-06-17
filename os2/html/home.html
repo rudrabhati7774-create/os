@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love OS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
+:root{--b:1}
+body{background:#000;color:#fff;min-height:100vh;overflow:hidden;filter:brightness(var(--b))}
+#stars{position:fixed;inset:0}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s infinite alternate}
+@keyframes twinkle{from{opacity:.2}to{opacity:1}}
+.nav{position:fixed;top:15px;left:15px;right:15px;z-index:10;
+background:rgba(255,255,255,.08);backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.15);border-radius:24px;
+padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px}
+.moon{width:180px;height:180px;border-radius:50%;overflow:hidden;cursor:pointer;
+box-shadow:0 0 30px #fff,0 0 80px #fff;animation:float 5s ease-in-out infinite}
+.moon img{width:100%;height:100%;object-fit:cover}
+@keyframes float{50%{transform:translateY(-12px)}}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.96);display:none;
+justify-content:center;align-items:center;z-index:100}
+.overlay.show{display:flex}
+.panel{width:min(92%,700px);padding:30px;border-radius:32px;
+background:rgba(255,255,255,.08);backdrop-filter:blur(30px);text-align:center}
+.slideWrap{margin:20px auto;width:280px;height:280px;border-radius:50%;overflow:hidden;
+box-shadow:0 0 30px #fff,0 0 80px rgba(255,255,255,.5)}
+.slideWrap img{width:100%;height:100%;object-fit:cover;animation:zoom 4s linear}
+@keyframes zoom{from{transform:scale(1)}to{transform:scale(1.15)}}
+#caption{min-height:40px;margin-top:15px}
+button{padding:12px 22px;border:none;border-radius:18px;cursor:pointer}
+.hearts{position:fixed;inset:0;pointer-events:none}
+.heart{position:absolute;bottom:-50px;animation:rise linear forwards}
+@keyframes rise{to{transform:translateY(-120vh)}}
+.appBtn{
+    margin-top:25px;
+    padding:14px 30px;
+    border:none;
+    border-radius:20px;
+    background:rgba(255,255,255,.15);
+    color:#fff;
+    font-size:16px;
+    cursor:pointer;
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,.2);
+    transition:.3s;
+}
+
+.appBtn:hover{
+    transform:translateY(-3px);
+    background:rgba(255,255,255,.25);
+    box-shadow:0 0 20px rgba(255,255,255,.4);
+}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<div class="nav">
+<div>❤️ Love OS</div>
+<div>🌙 <input id="br" type="range" min="50" max="150" value="100"> ☀️</div>
+</div>
+<br>
+<div class="hero">
+    <div class="moon" id="moon">
+        <img src="/os2/assets/moon/1.jpeg">
+    </div>
+
+    <h1 style="margin-top:20px">Welcome My Love ❤️</h1>
+    <p>Tap the moon and meet the most beautiful person in my universe.</p>
+
+    <button id="startBtn" class="appBtn">
+        Open App ❤️
+    </button>
+</div>
+
+<div class="overlay" id="overlay">
+<div class="panel">
+<h1 id="title"></h1>
+<p id="subtitle"></p>
+
+<div class="slideWrap" id="slideWrap" style="display:none">
+<img id="slide" src="/os2/assets/moon/1.jpeg">
+<img id="slide" src="/os2/assets/moon/2.jpeg">
+<img id="slide" src="/os2/assets/moon/3.jpeg">
+</div>
+
+<div id="caption"></div>
+<button id="close" style="display:none">Return To Home Screen ❤️</button>
+</div>
+</div>
+
+<div class="hearts" id="hearts"></div>
+
+<script>
+document.getElementById('br').oninput=e=>{
+document.documentElement.style.setProperty('--b',e.target.value/100);
+};
+document.getElementById("startBtn").onclick = () => {
+    window.location.href = "/OS/html/app.html";
+};
+for(let i=0;i<140;i++){
+let s=document.createElement('div');
+s.className='star';
+let z=Math.random()*3+1;
+s.style.width=z+'px'; s.style.height=z+'px';
+s.style.left=Math.random()*100+'vw';
+s.style.top=Math.random()*100+'vh';
+document.getElementById('stars').appendChild(s);
+}
+
+for(let i=0;i<20;i++){
+let h=document.createElement('div');
+h.className='heart';
+h.innerHTML='❤️';
+h.style.left=Math.random()*100+'vw';
+h.style.animationDuration=(8+Math.random()*8)+'s';
+document.getElementById('hearts').appendChild(h);
+}
+
+const photos=[];
+for(let i=1;i<=14;i++){
+photos.push({
+img:`/os2/assets/moon/${i}.jpeg`,
+text:[
+"My favorite smile ❤️","My moon 🌙","My happiness 💕","My safe place ❤️",
+"My sunshine ☀️","Beautiful as ever 💖","My heart chose you ❤️",
+"My forever 🌹","My best memory ✨","My dream come true 💕",
+"My world 🌍","My reason to smile 😊","My peace 🤍","My soulmate ❤️","My universe 🌙❤️"
+][(i-1)%100]
+});
+}
+
+const overlay=document.getElementById('overlay');
+const moon=document.getElementById('moon');
+const title=document.getElementById('title');
+const subtitle=document.getElementById('subtitle');
+const slide=document.getElementById('slide');
+const caption=document.getElementById('caption');
+const wrap=document.getElementById('slideWrap');
+const closeBtn=document.getElementById('close');
+
+moon.onclick=async ()=>{
+overlay.classList.add('show');
+title.textContent='';
+subtitle.textContent='';
+await typeText(title,'Meet My Moon 🌙❤️',1);
+await wait(200)
+await typeText(subtitle,'The most beautiful girl in my universe...',40);
+await wait(800);
+startShow();
+};
+
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+
+async function typeText(el,text,speed){
+for(let ch of text){el.textContent+=ch; await wait(speed);}
+}
+
+async function startShow(){
+wrap.style.display='block';
+for(let i=0;i<photos.length;i++){
+slide.src=photos[i].img;
+slide.style.animation='none';
+void slide.offsetWidth;
+slide.style.animation='zoom 4s linear';
+caption.textContent=photos[i].text;
+await wait(4000);
+}
+caption.innerHTML='And this is why my universe revolves around you ❤️';
+closeBtn.style.display='inline-block';
+}
+
+closeBtn.onclick=()=>{
+overlay.classList.remove('show');
+title.textContent='';
+subtitle.textContent='';
+caption.textContent='';
+closeBtn.style.display='none';
+wrap.style.display='none';
+};
+</script>
+</body>
+</html>

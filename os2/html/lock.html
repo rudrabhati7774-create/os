@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love OS Lock Screen</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+background:#000;
+position:relative;
+}
+
+/* Moon Background */
+
+body::before{
+content:'';
+position:absolute;
+width:250px;
+height:250px;
+background:white;
+border-radius:50%;
+top:10%;
+right:10%;
+box-shadow:
+0 0 60px white,
+0 0 120px white;
+opacity:.9;
+}
+
+/* Floating Hearts */
+
+.heart{
+position:absolute;
+font-size:20px;
+animation:float 10s linear infinite;
+opacity:.4;
+}
+
+@keyframes float{
+from{
+transform:translateY(100vh);
+}
+to{
+transform:translateY(-120px);
+}
+}
+
+/* Glass Card */
+
+.lock{
+width:340px;
+padding:25px;
+border-radius:35px;
+
+background:rgba(255,255,255,.08);
+
+backdrop-filter:blur(25px);
+-webkit-backdrop-filter:blur(25px);
+
+border:1px solid rgba(255,255,255,.2);
+
+box-shadow:
+0 8px 32px rgba(255,255,255,.1),
+inset 0 1px 1px rgba(255,255,255,.3);
+
+text-align:center;
+color:white;
+z-index:5;
+}
+
+.title{
+font-size:32px;
+font-weight:700;
+margin-bottom:8px;
+}
+
+.sub{
+color:#ddd;
+margin-bottom:30px;
+}
+
+.dots{
+display:flex;
+justify-content:center;
+gap:12px;
+margin-bottom:30px;
+}
+
+.dot{
+width:16px;
+height:16px;
+border-radius:50%;
+border:2px solid white;
+transition:.3s;
+}
+
+.dot.active{
+background:white;
+box-shadow:0 0 15px white;
+}
+
+.numpad{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+}
+
+.btn{
+height:70px;
+border-radius:22px;
+font-size:24px;
+color:white;
+
+background:rgba(255,255,255,.12);
+
+backdrop-filter:blur(10px);
+
+border:1px solid rgba(255,255,255,.2);
+
+cursor:pointer;
+transition:.3s;
+}
+
+.btn:hover{
+transform:scale(1.05);
+}
+
+.btn:active{
+transform:scale(.95);
+}
+
+.zero{
+grid-column:2;
+}
+
+.message{
+height:25px;
+margin-top:15px;
+font-size:14px;
+color:#ffb3c6;
+}
+
+.success{
+animation:success .8s ease;
+}
+
+@keyframes success{
+0%{
+transform:scale(1);
+}
+50%{
+transform:scale(1.08);
+}
+100%{
+transform:scale(1);
+}
+}
+
+.shake{
+animation:shake .5s;
+}
+
+@keyframes shake{
+0%,100%{transform:translateX(0);}
+20%{transform:translateX(-10px);}
+40%{transform:translateX(10px);}
+60%{transform:translateX(-10px);}
+80%{transform:translateX(10px);}
+}
+
+</style>
+</head>
+<body>
+
+<div class="lock" id="lock">
+
+<div class="title">❤️ Love OS</div>
+
+<div class="sub">
+Enter Secret Love Code
+</div>
+
+<div class="dots">
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+</div>
+
+<div class="numpad">
+
+<button class="btn" onclick="press(1)">1</button>
+<button class="btn" onclick="press(2)">2</button>
+<button class="btn" onclick="press(3)">3</button>
+
+<button class="btn" onclick="press(4)">4</button>
+<button class="btn" onclick="press(5)">5</button>
+<button class="btn" onclick="press(6)">6</button>
+
+<button class="btn" onclick="press(7)">7</button>
+<button class="btn" onclick="press(8)">8</button>
+<button class="btn" onclick="press(9)">9</button>
+
+<button class="btn zero" onclick="press(0)">0</button>
+
+</div>
+
+<div class="message" id="msg"></div>
+
+</div>
+
+<script>
+
+const PASS="7912";
+
+let input="";
+
+const dots=document.querySelectorAll('.dot');
+
+function updateDots(){
+
+dots.forEach((dot,index)=>{
+dot.classList.toggle("active",index<input.length);
+});
+
+}
+
+function press(num){
+
+if(input.length>=4) return;
+
+input+=num;
+
+updateDots();
+
+if(input.length===4){
+
+setTimeout(checkPass,200);
+
+}
+
+}
+
+function checkPass(){
+
+const lock=document.getElementById("lock");
+const msg=document.getElementById("msg");
+
+if(input===PASS){
+
+msg.innerHTML="💕 Welcome My Love";
+
+lock.classList.add("success");
+
+setTimeout(()=>{
+
+window.location.href="/os2/html/home.html";
+
+},1500);
+
+}
+else{
+
+msg.innerHTML="💔 Wrong Love Code";
+
+lock.classList.add("shake");
+
+setTimeout(()=>{
+lock.classList.remove("shake");
+},500);
+
+input="";
+updateDots();
+
+}
+
+}
+
+/* Floating Hearts */
+
+for(let i=0;i<25;i++){
+
+const h=document.createElement("div");
+
+h.className="heart";
+
+h.innerHTML="❤️";
+
+h.style.left=Math.random()*100+"vw";
+
+h.style.animationDuration=
+(6+Math.random()*10)+"s";
+
+h.style.fontSize=
+(12+Math.random()*18)+"px";
+
+document.body.appendChild(h);
+
+}
+
+</script>
+
+</body>
+</html>
